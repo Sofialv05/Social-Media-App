@@ -1,47 +1,18 @@
+import "dotenv/config";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-
-const books = [
-  {
-    title: "The Awakening",
-    author: "Kate Chopin",
-  },
-  {
-    title: "City of Glass",
-    author: "Paul Auster",
-  },
-];
-
-const typeDefs = `#graphql
-  type Book {
-    title: String
-    author: String
-  }
-
- 
-  type Query {
-    books: [Book]
-  }
-`;
-
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
+import userTypeDefs from "./schema/user.js";
+import userResolver from "./resolvers/user.js";
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: [userTypeDefs],
+  resolvers: [userResolver],
   introspection: true,
 });
 
 const { url } = await startStandaloneServer(server, {
-  listen: { port: process.env.PORT || 4000 },
+  listen: { port: process.env.PORT || 3000 },
 });
 
+// console.log(process.env);
 console.log(`🚀  Server ready at: ${url}`);
