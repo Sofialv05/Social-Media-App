@@ -1,22 +1,5 @@
 import User from "../models/User.js";
 
-const USER_DATA = [
-  {
-    _id: "1",
-    name: "test",
-    username: "test_user",
-    email: "test@gmail.com",
-    password: "123456",
-  },
-  {
-    _id: "2",
-    name: "test2",
-    username: "test_user2",
-    email: "test2@gmail.com",
-    password: "123456",
-  },
-];
-
 const resolvers = {
   Query: {
     findUsers: async () => {
@@ -26,14 +9,10 @@ const resolvers = {
   },
 
   Mutation: {
-    register: (_, args) => {
-      const newUser = {
-        ...args.inputUser,
-        _id: USER_DATA.length + 1,
-      };
-
-      USER_DATA.push(newUser);
-
+    register: async (_, { inputUser }) => {
+      //   console.log("test");
+      const result = await User.createOneUser(inputUser);
+      const newUser = await User.findOneUser(result.insertedId);
       return newUser;
     },
   },

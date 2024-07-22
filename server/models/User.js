@@ -1,33 +1,30 @@
+import { ObjectId } from "mongodb";
 import { database, client } from "../config/db.js";
 
 class User {
   static async findAllUsers() {
-    try {
-      const userCollection = database.collection("users");
-      const users = await userCollection.find().toArray();
-      console.log(users);
-      return users;
-    } catch (err) {
-      console.error(err);
-    } finally {
-      await client.close();
-    }
+    const userCollection = database.collection("users");
+    const users = userCollection.find().toArray();
+    console.log(users);
+    return users;
   }
-  static async createOneUser() {
-    try {
-      const userCollection = database.collection("users");
-      const user = await userCollection.insertOne({
-        name,
-        username,
-        email,
-        password,
-      });
-      return user;
-    } catch (err) {
-      console.error(err);
-    } finally {
-      await client.close();
-    }
+  static async findOneUser(userId) {
+    const userCollection = database.collection("users");
+    const user = userCollection.findOne({
+      _id: new ObjectId(userId),
+    });
+    //   console.log(user);
+    return user;
+  }
+  static async createOneUser({ name, username, email, password }) {
+    const userCollection = database.collection("users");
+    const user = userCollection.insertOne({
+      name,
+      username,
+      email,
+      password,
+    });
+    return user;
   }
 }
 

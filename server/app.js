@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import userTypeDefs from "./schema/user.js";
