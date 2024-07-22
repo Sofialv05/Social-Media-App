@@ -1,3 +1,5 @@
+import User from "../models/User.js";
+
 const USER_DATA = [
   {
     _id: "1",
@@ -17,8 +19,9 @@ const USER_DATA = [
 
 const resolvers = {
   Query: {
-    findUsers: () => {
-      return USER_DATA;
+    findUsers: async () => {
+      const data = await User.findAllUsers();
+      return data;
     },
   },
 
