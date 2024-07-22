@@ -7,12 +7,22 @@ const typeDefs = `#graphql
     password: String
   }
 
-input NewUser {
+  input NewUser {
     name: String! 
     username: String! 
     email: String!
     password: String!
-}
+  }
+
+  input LoginUser {
+    username: String! 
+    password: String!
+  }
+
+  type Token {
+    token: String
+    username: String
+  }
  
   type Query {
     findUsers: [User]
@@ -20,6 +30,7 @@ input NewUser {
 
   type Mutation {
     register(inputUser: NewUser): User
+    login(inputLogin: LoginUser): Token
   }
 `;
 

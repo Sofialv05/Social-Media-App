@@ -1,10 +1,12 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import userTypeDefs from "./schema/user.js";
+import postTypeDefs from "./schema/post.js";
+import followTypeDefs from "./schema/follow.js";
 import userResolver from "./resolvers/user.js";
 
 const server = new ApolloServer({
-  typeDefs: [userTypeDefs],
+  typeDefs: [userTypeDefs, postTypeDefs, followTypeDefs],
   resolvers: [userResolver],
   introspection: true,
 });

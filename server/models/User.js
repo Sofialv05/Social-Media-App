@@ -6,13 +6,21 @@ class User {
   static async findAllUsers() {
     const userCollection = database.collection("users");
     const users = userCollection.find().toArray();
-    console.log(users);
+    // console.log(users);
     return users;
   }
   static async findOneUser(userId) {
     const userCollection = database.collection("users");
     const user = userCollection.findOne({
       _id: new ObjectId(userId),
+    });
+    //   console.log(user);
+    return user;
+  }
+  static async findOneUserByUsername(username) {
+    const userCollection = database.collection("users");
+    const user = userCollection.findOne({
+      username: username,
     });
     //   console.log(user);
     return user;
