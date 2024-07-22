@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { database, client } from "../config/db.js";
+import { encrypt } from "../helpers/bcrypt.js";
 
 class User {
   static async findAllUsers() {
@@ -22,7 +23,7 @@ class User {
       name,
       username,
       email,
-      password,
+      password: encrypt(password),
     });
     return user;
   }
