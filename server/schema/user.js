@@ -28,8 +28,12 @@ const typeDefs = `#graphql
     findUsers: [User]
   }
 
+  type Message {
+    message: String
+  }
+
   type Mutation {
-    register(inputUser: NewUser): User
+    register(inputUser: NewUser): Message
     login(inputLogin: LoginUser): Token
   }
 `;

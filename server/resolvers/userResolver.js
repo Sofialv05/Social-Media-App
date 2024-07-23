@@ -1,6 +1,8 @@
 import { compare } from "../helpers/bcrypt.js";
 import { signToken } from "../helpers/jwt.js";
+import { GraphQLError } from "graphql";
 import User from "../models/User.js";
+import UserValidation from "../validations/userValidation.js";
 
 const resolvers = {
   Query: {
@@ -12,14 +14,24 @@ const resolvers = {
 
   Mutation: {
     register: async (_, { inputUser }) => {
-      //   console.log("test");
-      const result = await User.createOneUser(inputUser);
-      const newUser = await User.findOneUser(result.insertedId);
-      return newUser;
+      const validate = UserValidation.safeParse(inputUser);
+      // console.log(validate);
+      if (!validate.success) {
+        // console.error(validate.error.errors[0].message);
+        throw new GraphQLError(validate.error.errors[0].message, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      await User.createOneUser(inputUser);
+      return { message: "Successfully add new user" };
     },
 
     login: async (_, { inputLogin }) => {
       const { username, password } = inputLogin;
+
       const user = await User.findOneUserByUsername(username);
 
       const isValidPassword = compare(password, user.password);

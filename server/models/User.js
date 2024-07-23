@@ -9,7 +9,7 @@ class User {
     // console.log(users);
     return users;
   }
-  static async findOneUser(userId) {
+  static async findOneUserById(userId) {
     const userCollection = database.collection("users");
     const user = userCollection.findOne({
       _id: new ObjectId(userId),
