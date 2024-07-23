@@ -1,4 +1,14 @@
 const typeDefs = `#graphql
+type Post {
+    _id: String
+    content: String
+    tags: [String]
+    imgUrl: String
+    authorId: String
+    comments: [Comment]
+    likes: [Like]
+}
+
 type Comment {
     content: String
     username: String
@@ -12,14 +22,30 @@ type Like {
     updatedAt: String
 }
 
-type Post {
-    _id: String
-    content: String
-    tags: [String]
-    imgUrl: String
-    authorId: String
-    comments: [Comment]
-    likes: [Like]
+type Query {
+    findPosts: [Post]
+}
+
+input NewPost {
+    content: String!
+    tags: [String]!
+    imgUrl: [String]!
+    authorId: String!
+}
+
+input NewComment {
+    content: String!
+    username: String!
+}
+
+input NewLike {
+    username: String!
+}
+
+type Mutation {
+    addPost(inputPost: NewPost): Post
+    commentPost(inputComment: NewComment): Post
+    likePost(inputLike: NewLike): Post
 }
 `;
 

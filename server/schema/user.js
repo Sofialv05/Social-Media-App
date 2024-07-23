@@ -24,12 +24,12 @@ const typeDefs = `#graphql
     username: String
   }
  
-  type Query {
-    findUsers: [User]
-  }
-
   type Message {
     message: String
+  }
+
+  type Query {
+    findUsers: [User]
   }
 
   type Mutation {
