@@ -25,8 +25,17 @@ const resolvers = {
         });
       }
 
-      await User.createOneUser(inputUser);
-      return { message: "Successfully add new user" };
+      const result = await User.createOneUser(inputUser);
+
+      if (result.acknowledged) {
+        return { message: "Successfully add new user" };
+      } else {
+        throw GraphQLError("Failed to add user", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+          },
+        });
+      }
     },
 
     login: async (_, { inputLogin }) => {
@@ -36,9 +45,15 @@ const resolvers = {
 
       const isValidPassword = compare(password, user.password);
 
-      if (!isValidPassword) throw Error;
+      if (!isValidPassword) {
+        throw GraphQLError("Failed to login", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
 
-      const token = signToken({ _id: user._id });
+      const token = signToken({ _id: user._id, username });
 
       return { token, username };
     },

@@ -18,8 +18,8 @@ class Post {
     return post;
   }
 
-  static async createOnePost(inputPost) {
-    const { content, tags, imgUrl, authorId } = inputPost;
+  static async createOnePost(input) {
+    const { content, tags, imgUrl, authorId } = input;
     const postCollection = database.collection("posts");
     const post = postCollection.insertOne({
       content,

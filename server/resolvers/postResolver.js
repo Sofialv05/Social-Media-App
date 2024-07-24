@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import redis from "../config/redis.js";
 import Post from "../models/Post.js";
 
@@ -18,10 +19,13 @@ const resolvers = {
   },
 
   Mutation: {
-    addPost: async (_, { inputPost }) => {
+    addPost: async (_, { inputPost }, contextValue) => {
+      const user = contextValue.authentication();
+
       // await redis.del("posts:all");
       const postId = "";
-      await Post.createOnePost(inputPost);
+      const authorId = user._id;
+      await Post.createOnePost({ ...inputPost, authorId });
       const post = Post.findPostById(postId);
       const postChaches = await redis.get("posts:all");
 
