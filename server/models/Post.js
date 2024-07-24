@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { database } from "../config/db";
+import { database } from "../config/db.js";
 
 class Post {
   static async findAllPosts() {
@@ -7,6 +7,15 @@ class Post {
     const posts = postCollection.find().toArray();
 
     return posts;
+  }
+
+  static async findPostById(postId) {
+    const postCollection = database.collection("posts");
+    const post = postCollection.findOne({
+      _id: new ObjectId(postId),
+    });
+
+    return post;
   }
 
   static async createOnePost(inputPost) {

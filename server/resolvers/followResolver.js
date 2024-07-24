@@ -1,6 +1,6 @@
 const resolvers = {
   Mutation: {
-    followUsr: async (_, { inputFollow }) => {},
+    followUser: async (_, { inputFollow }) => {},
   },
 };
 

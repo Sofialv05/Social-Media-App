@@ -1,4 +1,4 @@
-import { database } from "../config/db";
+import { database } from "../config/db.js";
 
 class Follow {
   static async addFollow({ followingId }) {

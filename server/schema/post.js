@@ -24,6 +24,7 @@ type Like {
 
 type Query {
     findPosts: [Post]
+    findPost: Post
 }
 
 input NewPost {
