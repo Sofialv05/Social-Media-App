@@ -1,9 +1,11 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { userTypeDefs, postTypeDefs, followTypeDefs } from "./schema/index.js";
-import userResolver from "./resolvers/userResolver.js";
-import postResolver from "./resolvers/postResolver.js";
-import followResolver from "./resolvers/followResolver.js";
+import {
+  userResolver,
+  postResolver,
+  followResolver,
+} from "./resolvers/index.js";
 import { GraphQLError } from "graphql";
 import { verifyToken } from "./helpers/jwt.js";
 
@@ -19,13 +21,13 @@ const { url } = await startStandaloneServer(server, {
     return {
       authentication: () => {
         const access_token = req.headers.authorization;
-        if (!token) {
+        if (!access_token) {
           throw GraphQLError("Unauthenticated");
         }
 
-        const [Bearer, token] = access_token.split(" ");
+        const [bearer, token] = access_token.split(" ");
 
-        if (!Bearer || !token) {
+        if (bearer !== "Bearer" || !token) {
           throw GraphQLError("Unauthenticated");
         }
 
