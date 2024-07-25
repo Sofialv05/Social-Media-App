@@ -1,4 +1,4 @@
-import { SafeAreaView, Text } from "react-native";
+import { SafeAreaView } from "react-native";
 import { StyleSheet } from "react-native";
 import Header from "../components/Header";
 
@@ -13,5 +13,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 20,
   },
 });

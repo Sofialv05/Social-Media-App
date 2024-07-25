@@ -37,10 +37,12 @@ input NewPost {
 input NewComment {
     content: String!
     username: String!
+    postId: String!
 }
 
 input NewLike {
     username: String!
+    postId: String!
 }
 
 type Mutation {

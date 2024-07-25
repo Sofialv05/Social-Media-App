@@ -15,7 +15,9 @@ const resolvers = {
         return posts;
       }
     },
-    findPost: async () => {},
+    // findPost: async () => {
+
+    // },
   },
 
   Mutation: {
@@ -39,8 +41,20 @@ const resolvers = {
 
       return post;
     },
-    commentPost: async (_, { inputComment }) => {},
-    likePost: async (_, { inputLike }) => {},
+    commentPost: async (_, { inputComment }) => {
+      const post = await Post.addCommentOnPost(inputComment);
+      if (post.acknowledged) {
+        const findPost = await Post.findPostById(inputComment.postId);
+        return findPost;
+      }
+    },
+    likePost: async (_, { inputLike }) => {
+      const post = await Post.addLikeOnPost(inputLike);
+      if (post.acknowledged) {
+        const findPost = await Post.findPostById(inputLike.postId);
+        return findPost;
+      }
+    },
   },
 };
 

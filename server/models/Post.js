@@ -34,8 +34,7 @@ class Post {
   }
 
   static async addCommentOnPost(inputComment) {
-    const postId = "";
-    const { content, username } = inputComment;
+    const { content, username, postId } = inputComment;
     const postCollection = database.collection("posts");
 
     const post = postCollection.updateOne(
@@ -55,7 +54,7 @@ class Post {
     return post;
   }
 
-  static async addLikeOnPost({ username }) {
+  static async addLikeOnPost({ username, postId }) {
     const postId = "";
     const postCollection = database.collection("posts");
 
