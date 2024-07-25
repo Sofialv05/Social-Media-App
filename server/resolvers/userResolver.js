@@ -6,8 +6,15 @@ import UserValidation from "../validations/userValidation.js";
 
 const resolvers = {
   Query: {
-    findUsers: async () => {
-      const data = await User.findAllUsers();
+    findUsers: async (_, { search }) => {
+      const data = await User.findAllUsers(search);
+      return data;
+    },
+    findUserById: async (_, { userId }) => {
+      const data = await User.findOneUserById(userId);
+      if (!data) {
+        return new GraphQLError("User not found");
+      }
       return data;
     },
   },
@@ -15,10 +22,29 @@ const resolvers = {
   Mutation: {
     register: async (_, { inputUser }) => {
       const validate = UserValidation.safeParse(inputUser);
-      // console.log(validate);
+
       if (!validate.success) {
-        // console.error(validate.error.errors[0].message);
         throw new GraphQLError(validate.error.errors[0].message, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      const findUsername = await User.findOneUserByUsername(inputUser.username);
+
+      if (findUsername) {
+        return new GraphQLError("Username already exists", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      const findEmail = await User.findOneUserByEmail(inputUser.findEmail);
+
+      if (findEmail) {
+        return new GraphQLError("This email is already in use", {
           extensions: {
             code: "BAD_USER_INPUT",
           },

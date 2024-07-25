@@ -31,9 +31,8 @@ const { url } = await startStandaloneServer(server, {
           throw new GraphQLError("Invalid token");
         }
 
-        // console.log("test");
         const user = verifyToken(token);
-        // console.log(user);
+
         return user;
       },
     };

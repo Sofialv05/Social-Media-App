@@ -3,10 +3,15 @@ import { database, client } from "../config/db.js";
 import { encrypt } from "../helpers/bcrypt.js";
 
 class User {
-  static async findAllUsers() {
+  static async findAllUsers(search) {
     const userCollection = database.collection("users");
-    const users = userCollection.find().toArray();
-    // console.log(users);
+
+    let findUsername = {};
+    if (search) {
+      findUsername = { username: { $regex: search, $options: "i" } };
+    }
+    const users = userCollection.find(findUsername).toArray();
+
     return users;
   }
   static async findOneUserById(userId) {
@@ -14,7 +19,7 @@ class User {
     const user = userCollection.findOne({
       _id: new ObjectId(userId),
     });
-    //   console.log(user);
+
     return user;
   }
   static async findOneUserByUsername(username) {
@@ -22,7 +27,15 @@ class User {
     const user = userCollection.findOne({
       username: username,
     });
-    //   console.log(user);
+
+    return user;
+  }
+  static async findOneUserByEmail(email) {
+    const userCollection = database.collection("users");
+    const user = userCollection.findOne({
+      email,
+    });
+
     return user;
   }
   static async createOneUser({ name, username, email, password }) {

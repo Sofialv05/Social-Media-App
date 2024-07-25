@@ -5,8 +5,6 @@ class Post {
   static async findAllPosts(search) {
     const postCollection = database.collection("posts");
 
-    const regex = new RegExp(search, "i");
-
     const pipeline = [
       {
         $lookup: {
@@ -37,7 +35,7 @@ class Post {
     if (search) {
       pipeline.unshift({
         $match: {
-          content: regex,
+          content: { $regex: search, options: "i" },
         },
       });
     }

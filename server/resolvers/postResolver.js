@@ -26,6 +26,10 @@ const resolvers = {
     findPostById: async (_, { postId }) => {
       const post = await Post.findPostById(postId);
 
+      if (!post) {
+        return new GraphQLError("Post not found");
+      }
+
       return post[0];
     },
   },
@@ -40,16 +44,17 @@ const resolvers = {
 
       if (postChaches) {
         await redis.del("posts:all");
-        // const parsedChaches = JSON.parse(postChaches);
-
-        // parsedChaches.push(post);
-
-        // await redis.set("posts:all", JSON.stringify(parsedChaches));
       }
 
       if (post.acknowledged) {
         return { message: "Successfully add new post" };
       }
+
+      return new GraphQLError("Failed to add post", {
+        extensions: {
+          code: "INTERNAL_SERVER_ERROR",
+        },
+      });
     },
     commentPost: async (_, { inputComment }, contextValue) => {
       const user = contextValue.authentication();
@@ -72,6 +77,12 @@ const resolvers = {
         const findPost = await Post.findPostById(inputComment.postId);
         return findPost;
       }
+
+      return new GraphQLError("Failed to add comment", {
+        extensions: {
+          code: "INTERNAL_SERVER_ERROR",
+        },
+      });
     },
     likePost: async (_, { inputLike }, contextValue) => {
       const user = contextValue.authentication();
@@ -84,16 +95,17 @@ const resolvers = {
 
       if (postChaches) {
         await redis.del("posts:all");
-        // const parsedChaches = JSON.parse(postChaches);
-
-        // parsedChaches.push(post);
-
-        // await redis.set("posts:all", JSON.stringify(parsedChaches));
       }
       if (post.acknowledged) {
         const findPost = await Post.findPostById(inputLike.postId);
         return findPost;
       }
+
+      return new GraphQLError("Failed to like a post", {
+        extensions: {
+          code: "INTERNAL_SERVER_ERROR",
+        },
+      });
     },
   },
 };
