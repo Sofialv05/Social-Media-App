@@ -15,12 +15,33 @@ class User {
     return users;
   }
   static async findOneUserById(userId) {
+    const pipeline = [
+      {
+        $match: {
+          _id: new ObjectId(userId),
+        },
+      },
+      {
+        $lookup: {
+          from: "follows",
+          localField: "_id",
+          foreignField: "followingId",
+          as: "followers",
+        },
+      },
+      {
+        $lookup: {
+          from: "follows",
+          localField: "_id",
+          foreignField: "followerId",
+          as: "following",
+        },
+      },
+    ];
     const userCollection = database.collection("users");
-    const user = userCollection.findOne({
-      _id: new ObjectId(userId),
-    });
+    const users = userCollection.aggregate(pipeline).toArray();
 
-    return user;
+    return users;
   }
   static async findOneUserByUsername(username) {
     const userCollection = database.collection("users");

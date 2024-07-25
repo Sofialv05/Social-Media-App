@@ -3,7 +3,7 @@ import { database } from "../config/db.js";
 
 class Follow {
   static async addFollow({ followingId, followerId }) {
-    const followCollection = database.collection("follow");
+    const followCollection = database.collection("follows");
     const follow = followCollection.insertOne({
       followingId: new ObjectId(followingId),
       followerId: new ObjectId(followerId),
@@ -15,7 +15,7 @@ class Follow {
   }
 
   static async findFollowers(userId) {
-    const followCollection = database.collection("follow");
+    const followCollection = database.collection("follows");
     const pipeline = [
       {
         $lookup: {
@@ -48,7 +48,7 @@ class Follow {
     return followers;
   }
   static async findFollowing(userId) {
-    const followCollection = database.collection("follow");
+    const followCollection = database.collection("follows");
     const pipeline = [
       {
         $lookup: {

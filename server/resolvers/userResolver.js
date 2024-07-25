@@ -15,7 +15,16 @@ const resolvers = {
       if (!data) {
         return new GraphQLError("User not found");
       }
-      return data;
+      // console.log(data);
+      return data[0];
+    },
+    findUserProfile: async (_, __, contextValue) => {
+      const user = contextValue.authentication();
+      const data = await User.findOneUserById(user._id);
+      if (!data) {
+        return new GraphQLError("User not found");
+      }
+      return data[0];
     },
   },
 
