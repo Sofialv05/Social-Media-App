@@ -24,32 +24,40 @@ const resolvers = {
     addPost: async (_, { inputPost }, contextValue) => {
       const user = contextValue.authentication();
 
-      // await redis.del("posts:all");
-      const postId = "";
       const authorId = user._id;
-      await Post.createOnePost({ ...inputPost, authorId });
-      const post = Post.findPostById(postId);
+      const post = await Post.createOnePost({ ...inputPost, authorId });
       const postChaches = await redis.get("posts:all");
 
       if (postChaches) {
-        const parsedChaches = JSON.parse(postChaches);
+        await redis.del("posts:all");
+        // const parsedChaches = JSON.parse(postChaches);
 
-        parsedChaches.push(post);
+        // parsedChaches.push(post);
 
-        await redis.set("posts:all", JSON.stringify(parsedChaches));
+        // await redis.set("posts:all", JSON.stringify(parsedChaches));
       }
 
-      return post;
+      if (post.acknowledged) {
+        return { message: "Successfully add new post" };
+      }
     },
-    commentPost: async (_, { inputComment }) => {
-      const post = await Post.addCommentOnPost(inputComment);
+    commentPost: async (_, { inputComment }, contextValue) => {
+      const user = contextValue.authentication();
+      const post = await Post.addCommentOnPost({
+        ...inputComment,
+        username: user.username,
+      });
       if (post.acknowledged) {
         const findPost = await Post.findPostById(inputComment.postId);
         return findPost;
       }
     },
-    likePost: async (_, { inputLike }) => {
-      const post = await Post.addLikeOnPost(inputLike);
+    likePost: async (_, { inputLike }, contextValue) => {
+      const user = contextValue.authentication();
+      const post = await Post.addLikeOnPost({
+        ...inputLike,
+        username: user.username,
+      });
       if (post.acknowledged) {
         const findPost = await Post.findPostById(inputLike.postId);
         return findPost;

@@ -30,23 +30,24 @@ type Query {
 input NewPost {
     content: String!
     tags: [String]!
-    imgUrl: [String]!
-    authorId: String!
+    imgUrl: String!
 }
 
 input NewComment {
     content: String!
-    username: String!
     postId: String!
 }
 
 input NewLike {
-    username: String!
     postId: String!
 }
 
+type Message {
+    message: String!
+}
+
 type Mutation {
-    addPost(inputPost: NewPost): Post
+    addPost(inputPost: NewPost): Message
     commentPost(inputComment: NewComment): Post
     likePost(inputLike: NewLike): Post
 }

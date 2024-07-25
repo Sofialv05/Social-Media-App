@@ -30,7 +30,7 @@ const resolvers = {
       if (result.acknowledged) {
         return { message: "Successfully add new user" };
       } else {
-        throw GraphQLError("Failed to add user", {
+        throw new GraphQLError("Failed to add user", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
           },
@@ -41,12 +41,35 @@ const resolvers = {
     login: async (_, { inputLogin }) => {
       const { username, password } = inputLogin;
 
+      if (!username) {
+        throw new GraphQLError("Username is required", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      if (!password) {
+        throw new GraphQLError("Pasword is required", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
       const user = await User.findOneUserByUsername(username);
+
+      if (!user) {
+        throw new GraphQLError("Username does not exist", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
 
       const isValidPassword = compare(password, user.password);
 
       if (!isValidPassword) {
-        throw GraphQLError("Failed to login", {
+        throw new GraphQLError("Invalid Password", {
           extensions: {
             code: "BAD_USER_INPUT",
           },

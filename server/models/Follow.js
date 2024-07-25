@@ -1,9 +1,7 @@
 import { database } from "../config/db.js";
 
 class Follow {
-  static async addFollow({ followingId }) {
-    const followerId = "";
-
+  static async addFollow({ followingId, followerId }) {
     const followCollection = database.collection("follow");
     const follow = followCollection.insertOne({
       followingId,

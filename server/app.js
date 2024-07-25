@@ -22,17 +22,18 @@ const { url } = await startStandaloneServer(server, {
       authentication: () => {
         const access_token = req.headers.authorization;
         if (!access_token) {
-          throw GraphQLError("Unauthenticated");
+          throw new GraphQLError("Unauthenticated");
         }
 
         const [bearer, token] = access_token.split(" ");
 
         if (bearer !== "Bearer" || !token) {
-          throw GraphQLError("Unauthenticated");
+          throw new GraphQLError("Invalid token");
         }
 
+        // console.log("test");
         const user = verifyToken(token);
-
+        // console.log(user);
         return user;
       },
     };

@@ -12,8 +12,12 @@ input NewFollow {
     followingId: String!
 }
 
+type Message {
+    message: String!
+}
+
 type Mutation {
-    followUser(inputFollow: NewFollow): Follow
+    followUser(inputFollow: NewFollow): Message
 }
 `;
 

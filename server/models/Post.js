@@ -55,7 +55,6 @@ class Post {
   }
 
   static async addLikeOnPost({ username, postId }) {
-    const postId = "";
     const postCollection = database.collection("posts");
 
     const post = postCollection.updateOne(
