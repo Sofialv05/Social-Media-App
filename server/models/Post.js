@@ -35,7 +35,7 @@ class Post {
     ];
 
     if (search) {
-      pipeline.push({
+      pipeline.unshift({
         $match: {
           content: regex,
         },
@@ -114,11 +114,10 @@ class Post {
         },
       },
     ];
-    const posts = postCollection.aggregate(pipeline);
-    const onePost = await posts.next();
+    const posts = postCollection.aggregate(pipeline).toArray();
     // console.log(onePost);
 
-    return onePost;
+    return posts;
   }
 
   static async createOnePost(input) {

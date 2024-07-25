@@ -30,6 +30,7 @@ const typeDefs = `#graphql
 
   type Query {
     findUsers: [User]
+    findUser: User
   }
 
   type Mutation {

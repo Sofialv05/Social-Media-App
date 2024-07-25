@@ -26,7 +26,7 @@ const resolvers = {
     findPostById: async (_, { postId }) => {
       const post = await Post.findPostById(postId);
 
-      return post;
+      return post[0];
     },
   },
 
@@ -57,6 +57,17 @@ const resolvers = {
         ...inputComment,
         username: user.username,
       });
+
+      const postChaches = await redis.get("posts:all");
+
+      if (postChaches) {
+        await redis.del("posts:all");
+        // const parsedChaches = JSON.parse(postChaches);
+
+        // parsedChaches.push(post);
+
+        // await redis.set("posts:all", JSON.stringify(parsedChaches));
+      }
       if (post.acknowledged) {
         const findPost = await Post.findPostById(inputComment.postId);
         return findPost;
@@ -68,6 +79,17 @@ const resolvers = {
         ...inputLike,
         username: user.username,
       });
+
+      const postChaches = await redis.get("posts:all");
+
+      if (postChaches) {
+        await redis.del("posts:all");
+        // const parsedChaches = JSON.parse(postChaches);
+
+        // parsedChaches.push(post);
+
+        // await redis.set("posts:all", JSON.stringify(parsedChaches));
+      }
       if (post.acknowledged) {
         const findPost = await Post.findPostById(inputLike.postId);
         return findPost;
