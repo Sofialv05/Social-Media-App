@@ -2,20 +2,123 @@ import { ObjectId } from "mongodb";
 import { database } from "../config/db.js";
 
 class Post {
-  static async findAllPosts() {
+  static async findAllPosts(search) {
     const postCollection = database.collection("posts");
-    const posts = postCollection.find().toArray();
+
+    const regex = new RegExp(search, "i");
+
+    const pipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: {
+          path: "$author",
+        },
+      },
+      {
+        $project: {
+          "author.password": 0,
+          "author._id": 0,
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ];
+
+    if (search) {
+      pipeline.push({
+        $match: {
+          content: regex,
+        },
+      });
+    }
+
+    const posts = postCollection.aggregate(pipeline).toArray();
 
     return posts;
   }
 
+  static async findPostByAuthorId(authorId) {
+    const postCollection = database.collection("posts");
+
+    const pipeline = [
+      {
+        $match: {
+          authorId: new ObjectId(authorId),
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: {
+          path: "$author",
+        },
+      },
+      {
+        $project: {
+          "author.password": 0,
+          "author._id": 0,
+        },
+      },
+    ];
+    const posts = postCollection.aggregate(pipeline).toArray();
+
+    return posts;
+  }
   static async findPostById(postId) {
     const postCollection = database.collection("posts");
-    const post = postCollection.findOne({
-      _id: new ObjectId(postId),
-    });
 
-    return post;
+    const pipeline = [
+      {
+        $match: {
+          _id: new ObjectId(postId),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "authorId",
+          foreignField: "_id",
+          as: "author",
+        },
+      },
+      {
+        $unwind: {
+          path: "$author",
+        },
+      },
+      {
+        $project: {
+          "author.password": 0,
+          "author._id": 0,
+        },
+      },
+    ];
+    const posts = postCollection.aggregate(pipeline);
+    const onePost = await posts.next();
+    // console.log(onePost);
+
+    return onePost;
   }
 
   static async createOnePost(input) {
@@ -25,7 +128,7 @@ class Post {
       content,
       tags,
       imgUrl,
-      authorId,
+      authorId: new ObjectId(authorId),
       comments: [],
       likes: [],
     });

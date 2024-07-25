@@ -4,20 +4,30 @@ import Post from "../models/Post.js";
 
 const resolvers = {
   Query: {
-    findPosts: async () => {
+    findPosts: async (_, { search }) => {
       const postChaches = await redis.get("posts:all");
 
       if (postChaches) {
         return JSON.parse(postChaches);
       } else {
-        const posts = await Post.findAllPosts();
+        const posts = await Post.findAllPosts(search);
         await redis.set("posts:all", JSON.stringify(posts));
         return posts;
       }
     },
-    // findPost: async () => {
+    findPostByAuthorId: async (_, __, contextValue) => {
+      const user = contextValue.authentication();
 
-    // },
+      const posts = await Post.findPostByAuthorId(user._id);
+
+      return posts;
+    },
+
+    findPostById: async (_, { postId }) => {
+      const post = await Post.findPostById(postId);
+
+      return post;
+    },
   },
 
   Mutation: {

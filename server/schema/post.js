@@ -5,8 +5,15 @@ type Post {
     tags: [String]
     imgUrl: String
     authorId: String
+    author: Author
     comments: [Comment]
     likes: [Like]
+}
+
+type Author {
+    name: String
+    username: String,
+    email: String,
 }
 
 type Comment {
@@ -22,10 +29,6 @@ type Like {
     updatedAt: String
 }
 
-type Query {
-    findPosts: [Post]
-    findPost: Post
-}
 
 input NewPost {
     content: String!
@@ -44,6 +47,12 @@ input NewLike {
 
 type Message {
     message: String!
+}
+
+type Query {
+    findPosts(search: String): [Post]
+    findPostById(postId: String!): Post
+    findPostByAuthorId: [Post]
 }
 
 type Mutation {
