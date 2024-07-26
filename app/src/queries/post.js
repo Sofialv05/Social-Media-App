@@ -24,6 +24,8 @@ export const GET_POSTS = gql`
       createdAt
       updatedAt
     }
+    createdAt
+    updatedAt
   }
 }
 `;

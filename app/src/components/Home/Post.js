@@ -1,18 +1,33 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 
 const Post = ({ post }) => {
   return (
-    <View style={{ marginBottom: 30 }}>
+    <View style={{ flex: 1, marginBottom: 30 }}>
       <PostHeader username={post.author.username} />
+      <View style={{ height: 400, width: "auto" }}>
+        <Image
+          style={{ height: "100%", width: "100%" }}
+          source={{ uri: post.imgUrl }}
+        />
+      </View>
 
-      <Image
-        style={{ height: 500, width: 500 }}
-        source={{ uri: post.imgUrl }}
+      <PostFooter
+        username={post.author.username}
+        likes={post.likes}
+        content={post.content}
+        comments={post.comments}
       />
-      <PostFooter />
+      {console.log(post.comments)}
     </View>
   );
 };
@@ -31,22 +46,69 @@ const PostHeader = ({ username }) => {
   );
 };
 
-const PostFooter = () => {
+const PostFooter = ({ username, likes, content, comments, navigation }) => {
   return (
-    <View style={{ flexDirection: "row" }}>
-      <TouchableOpacity>
-        <AntDesign name="hearto" size={24} color="black" />
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Ionicons
-          name="chatbubble-outline"
-          size={24}
-          color="black"
-          style={{ transform: [{ rotateY: "180deg" }] }}
-        />
-      </TouchableOpacity>
+    <View style={{ marginHorizontal: 15 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          marginVertical: 10,
+        }}
+      >
+        <View style={{ marginRight: 18 }}>
+          <TouchableOpacity>
+            <AntDesign name="hearto" size={24} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity>
+            <Ionicons
+              name="chatbubble-outline"
+              size={24}
+              color="black"
+              style={{ transform: [{ rotateY: "180deg" }] }}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View>
+        {likes.length !== 0 ? (
+          <Text style={styles.headerUsername}>
+            {likes.length > 1
+              ? `${likes.length} likes`
+              : `${likes.length} like`}
+          </Text>
+        ) : (
+          ""
+        )}
+        <Text style={styles.headerUsername}>
+          <Text style={{ ...styles.headerUsername, fontWeight: "500" }}>
+            {username}
+          </Text>{" "}
+          {content}
+        </Text>
+      </View>
+      <Comment comments={comments} />
     </View>
   );
+};
+
+const Comment = ({ comments, navigation }) => {
+  {
+    if (comments.length !== 0) {
+      return (
+        <View>
+          <TouchableOpacity>
+            <Text style={{ color: "gray" }}>
+              {comments.length == 1
+                ? `View ${comments.length} comment`
+                : `View all ${comments.length} comments`}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+  }
 };
 
 const styles = StyleSheet.create({
@@ -58,7 +120,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerUsername: {
-    fontSize: 18,
+    fontSize: 16,
   },
   profilePic: {
     width: 35,

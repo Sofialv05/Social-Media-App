@@ -128,6 +128,8 @@ class Post {
       authorId: new ObjectId(authorId),
       comments: [],
       likes: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     return post;

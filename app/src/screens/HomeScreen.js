@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  FlatList,
   SafeAreaView,
   ScrollView,
   View,
@@ -25,9 +26,11 @@ export default function HomeScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Stories />
         <View style={styles.posts}>
-          {data.findPosts.map((post, index) => {
-            return <Post post={post} key={index} />;
-          })}
+          <FlatList
+            data={data.findPosts}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item, index }) => <Post post={item} key={index} />}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -37,7 +40,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
+
     backgroundColor: "white",
   },
   posts: {

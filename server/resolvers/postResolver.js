@@ -74,8 +74,7 @@ const resolvers = {
         // await redis.set("posts:all", JSON.stringify(parsedChaches));
       }
       if (post.acknowledged) {
-        const findPost = await Post.findPostById(inputComment.postId);
-        return findPost;
+        return { message: "Successfully add a comment" };
       }
 
       return new GraphQLError("Failed to add comment", {
@@ -97,8 +96,7 @@ const resolvers = {
         await redis.del("posts:all");
       }
       if (post.acknowledged) {
-        const findPost = await Post.findPostById(inputLike.postId);
-        return findPost;
+        return { message: "Successfully like a post" };
       }
 
       return new GraphQLError("Failed to like a post", {

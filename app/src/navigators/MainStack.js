@@ -12,8 +12,10 @@ import {
   MaterialIcons,
   FontAwesome,
 } from "@expo/vector-icons";
+import CreatePostScreen from "../screens/CreatePostScreen";
+import UserProfile from "../screens/UserProfile";
 
-const MainStack = () => {
+const MainStack = (props) => {
   const Tab = createBottomTabNavigator();
   return (
     <NavigationContainer>
@@ -52,8 +54,9 @@ const MainStack = () => {
         />
         <Tab.Screen
           name="AddPost"
-          component={LoginScreen}
+          component={CreatePostScreen}
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused, color, size }) => {
               if (focused) {
                 return <MaterialIcons name="add-box" size={29} color="black" />;
@@ -66,8 +69,9 @@ const MainStack = () => {
         />
         <Tab.Screen
           name="Profile"
-          component={HomeScreen}
+          component={UserProfile}
           options={{
+            headerShown: false,
             tabBarIcon: () => null,
             tabBarLabel: () => null,
           }}

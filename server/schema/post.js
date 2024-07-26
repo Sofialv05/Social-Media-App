@@ -8,6 +8,8 @@ type Post {
     author: Author
     comments: [Comment]
     likes: [Like]
+    createdAt: String
+    updatedAt: String
 }
 
 type Author {
@@ -57,8 +59,8 @@ type Query {
 
 type Mutation {
     addPost(inputPost: NewPost): Message
-    commentPost(inputComment: NewComment): Post
-    likePost(inputLike: NewLike): Post
+    commentPost(inputComment: NewComment): Message
+    likePost(inputLike: NewLike): Message
 }
 `;
 
