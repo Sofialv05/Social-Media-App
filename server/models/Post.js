@@ -35,7 +35,7 @@ class Post {
     if (search) {
       pipeline.unshift({
         $match: {
-          content: { $regex: search, options: "i" },
+          content: { $regex: search, $options: "i" },
         },
       });
     }

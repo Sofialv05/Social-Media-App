@@ -4,11 +4,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Logo from "../components/header/Logo";
 import Icon from "../components/header/Icon";
-import Home from "../components/tab/Home";
-import AddPost from "../components/tab/AddPost";
-import Search from "../components/tab/Search";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import {
+  Octicons,
+  Feather,
+  MaterialIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
 
 const MainStack = () => {
   const Tab = createBottomTabNavigator();
@@ -21,7 +24,15 @@ const MainStack = () => {
           options={{
             headerTitle: () => <Logo />,
             headerRight: () => <Icon />,
-            tabBarIcon: () => <Home />,
+            tabBarIcon: ({ focused, color, size }) => {
+              if (focused) {
+                return (
+                  <MaterialIcons name="home-filled" size={30} color="black" />
+                );
+              } else {
+                return <Octicons name="home" size={24} color="black" />;
+              }
+            },
             tabBarLabel: () => null,
           }}
         />
@@ -29,7 +40,13 @@ const MainStack = () => {
           name="Search"
           component={RegisterScreen}
           options={{
-            tabBarIcon: () => <Search />,
+            tabBarIcon: ({ focused, color, size }) => {
+              if (focused) {
+                return <FontAwesome name="search" size={24} color="black" />;
+              } else {
+                return <Feather name="search" size={24} color="black" />;
+              }
+            },
             tabBarLabel: () => null,
           }}
         />
@@ -37,7 +54,13 @@ const MainStack = () => {
           name="AddPost"
           component={LoginScreen}
           options={{
-            tabBarIcon: () => <AddPost />,
+            tabBarIcon: ({ focused, color, size }) => {
+              if (focused) {
+                return <MaterialIcons name="add-box" size={29} color="black" />;
+              } else {
+                return <Octicons name="diff-added" size={24} color="black" />;
+              }
+            },
             tabBarLabel: () => null,
           }}
         />

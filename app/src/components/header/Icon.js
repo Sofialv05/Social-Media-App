@@ -1,12 +1,14 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { StyleSheet } from "react-native";
 import React from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const Icon = () => {
   return (
     <View style={styles.icons}>
       <TouchableOpacity>
-        <Image style={styles.like} source={require("../../assets/like.png")} />
+        <AntDesign name="hearto" size={27} color="black" />
       </TouchableOpacity>
       <TouchableOpacity>
         <Image
@@ -28,20 +30,13 @@ const styles = StyleSheet.create({
   icons: {
     flexDirection: "row",
   },
-  like: {
-    width: 27,
-    height: 27,
-    marginLeft: 25,
-    resizeMode: "contain",
-    top: 1,
-  },
   message: {
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
     marginLeft: 20,
     marginRight: 25,
     resizeMode: "contain",
-    top: 2,
+    bottom: 1,
   },
 });
 
