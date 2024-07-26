@@ -77,20 +77,17 @@ const styles = StyleSheet.create({
   header: {
     height: 70,
     justifyContent: "center",
-
-    top: 8,
   },
   profile: {
     width: 70,
     height: 70,
     borderRadius: 50,
     borderWidth: 3,
-    marginVertical: 10,
+    marginBottom: 10,
   },
   info: {
     flex: 1,
     alignItems: "center",
-    marginTop: 12,
   },
 });
 
