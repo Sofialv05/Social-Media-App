@@ -21,14 +21,9 @@ const Icon = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
-    marginHorizontal: 20,
-  },
   icons: {
     flexDirection: "row",
+    left: 10,
   },
   message: {
     width: 30,
