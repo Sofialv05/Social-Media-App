@@ -15,7 +15,6 @@ const resolvers = {
       if (!data) {
         return new GraphQLError("User not found");
       }
-      // console.log(data);
       return data[0];
     },
     findUserProfile: async (_, __, contextValue) => {
