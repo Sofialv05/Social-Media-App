@@ -14,6 +14,7 @@ import {
 } from "@expo/vector-icons";
 import CreatePostScreen from "../screens/CreatePostScreen";
 import UserProfile from "../screens/UserProfile";
+import SearchScreen from "../screens/SearchScreen";
 
 const MainStack = (props) => {
   const Tab = createBottomTabNavigator();
@@ -40,8 +41,9 @@ const MainStack = (props) => {
         />
         <Tab.Screen
           name="Search"
-          component={RegisterScreen}
+          component={SearchScreen}
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused, color, size }) => {
               if (focused) {
                 return <FontAwesome name="search" size={24} color="black" />;
