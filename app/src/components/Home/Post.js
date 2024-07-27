@@ -10,7 +10,7 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 
-const Post = ({ post }) => {
+const Post = ({ post, navigation }) => {
   return (
     <View style={{ flex: 1, marginBottom: 30 }}>
       <PostHeader username={post.author.username} />
@@ -26,6 +26,7 @@ const Post = ({ post }) => {
         likes={post.likes}
         content={post.content}
         comments={post.comments}
+        navigation={navigation}
       />
       {console.log(post.comments)}
     </View>
@@ -88,7 +89,7 @@ const PostFooter = ({ username, likes, content, comments, navigation }) => {
           {content}
         </Text>
       </View>
-      <Comment comments={comments} />
+      <Comment comments={comments} navigation={navigation} />
     </View>
   );
 };
@@ -98,7 +99,11 @@ const Comment = ({ comments, navigation }) => {
     if (comments.length !== 0) {
       return (
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+          >
             <Text style={{ color: "gray" }}>
               {comments.length == 1
                 ? `View ${comments.length} comment`

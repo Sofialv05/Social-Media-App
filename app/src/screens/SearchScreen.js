@@ -13,8 +13,8 @@ const SearchScreen = () => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView>
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SearchBar
           value={query}
           onChangeText={updateSearch}

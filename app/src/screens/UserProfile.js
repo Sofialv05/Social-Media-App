@@ -6,8 +6,8 @@ import PostGrid from "../components/PostGrid";
 
 const UserProfile = () => {
   return (
-    <View>
-      <ScrollView>
+    <View style={{ backgroundColor: "white", flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.container}>
           <Header />
           <Profile />
