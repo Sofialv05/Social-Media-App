@@ -6,14 +6,20 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "../../mutations/auth";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [form, setForm] = useState({
     username: "",
     password: "",
   });
+
+  const [loginFn, { data, error, loading }] = useMutation(LOGIN);
+
   return (
     <SafeAreaView style={{ backgroundColor: "#ebecf4", flex: 1 }}>
       <View style={styles.container}>
@@ -43,20 +49,42 @@ const LoginScreen = () => {
               onChangeText={(password) => setForm({ ...form, password })}
             />
             <View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={async () => {
+                  await loginFn({
+                    variables: {
+                      username: form.username,
+                      password: form.password,
+                    },
+                  });
+                  navigation.replace("Home");
+                }}
+              >
                 <View style={{ ...styles.button, backgroundColor: "#075eec" }}>
-                  <Text
-                    style={{ color: "white", fontWeight: "500", fontSize: 18 }}
-                  >
-                    Log in
-                  </Text>
+                  {loading ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "500",
+                        fontSize: 18,
+                      }}
+                    >
+                      Log in
+                    </Text>
+                  )}
                 </View>
               </TouchableOpacity>
             </View>
           </View>
         </View>
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Register");
+            }}
+          >
             <View
               style={{
                 ...styles.button,

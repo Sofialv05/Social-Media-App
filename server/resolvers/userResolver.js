@@ -49,10 +49,18 @@ const resolvers = {
         });
       }
 
-      const findEmail = await User.findOneUserByEmail(inputUser.findEmail);
+      const findEmail = await User.findOneUserByEmail(inputUser.email);
 
       if (findEmail) {
         return new GraphQLError("This email is already in use", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
+      }
+
+      if (inputUser.password !== inputUser.confirmPassword) {
+        return new GraphQLError("Password doesn't match", {
           extensions: {
             code: "BAD_USER_INPUT",
           },

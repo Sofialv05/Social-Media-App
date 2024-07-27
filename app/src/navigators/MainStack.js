@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import HomeScreen from "../screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -15,10 +15,10 @@ import {
 import CreatePostScreen from "../screens/CreatePostScreen";
 import UserProfile from "../screens/UserProfile";
 import SearchScreen from "../screens/SearchScreen";
-import Sheet from "../components/BottomSheet";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { BottomSheet } from "react-native-elements";
+
 import Post from "../components/Home/Post";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,8 +30,7 @@ const MainTab = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: () => <Logo />,
-          headerRight: () => <Icon />,
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             if (focused) {
               return (
@@ -61,7 +60,7 @@ const MainTab = () => {
       />
       <Tab.Screen
         name="AddPost"
-        component={Sheet}
+        component={CreatePostScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
@@ -88,34 +87,38 @@ const MainTab = () => {
 };
 
 const MainStack = (props) => {
+  const { isSignedIn } = useContext(AuthContext);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="MainTab"
-          component={MainTab}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={RegisterScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Comments"
-          component={BottomSheet}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Post"
-          component={Post}
-          options={{ headerShown: false }}
-        />
+        {!isSignedIn ? (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="MainTab"
+              component={MainTab}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Post"
+              component={Post}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,16 +1,9 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 
-const Post = ({ post, navigation }) => {
+const Post = ({ post, navigation, handleOpenSheet }) => {
   return (
     <View style={{ flex: 1, marginBottom: 30 }}>
       <PostHeader username={post.author.username} />
@@ -27,8 +20,8 @@ const Post = ({ post, navigation }) => {
         content={post.content}
         comments={post.comments}
         navigation={navigation}
+        handleOpenSheet={handleOpenSheet}
       />
-      {console.log(post.comments)}
     </View>
   );
 };
@@ -47,7 +40,14 @@ const PostHeader = ({ username }) => {
   );
 };
 
-const PostFooter = ({ username, likes, content, comments, navigation }) => {
+const PostFooter = ({
+  username,
+  likes,
+  content,
+  comments,
+  navigation,
+  handleOpenSheet,
+}) => {
   return (
     <View style={{ marginHorizontal: 15 }}>
       <View
@@ -62,7 +62,7 @@ const PostFooter = ({ username, likes, content, comments, navigation }) => {
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenSheet}>
             <Ionicons
               name="chatbubble-outline"
               size={24}
@@ -89,21 +89,21 @@ const PostFooter = ({ username, likes, content, comments, navigation }) => {
           {content}
         </Text>
       </View>
-      <Comment comments={comments} navigation={navigation} />
+      <Comment
+        comments={comments}
+        navigation={navigation}
+        handleOpenSheet={handleOpenSheet}
+      />
     </View>
   );
 };
 
-const Comment = ({ comments, navigation }) => {
+const Comment = ({ comments, navigation, handleOpenSheet }) => {
   {
     if (comments.length !== 0) {
       return (
         <View>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Login");
-            }}
-          >
+          <TouchableOpacity onPress={handleOpenSheet}>
             <Text style={{ color: "gray" }}>
               {comments.length == 1
                 ? `View ${comments.length} comment`

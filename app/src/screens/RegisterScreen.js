@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-const RegisterScreen = () => {
+
+const RegisterScreen = ({ navigation }) => {
   const [form, setForm] = useState({
     username: "",
     name: "",
@@ -84,7 +85,11 @@ const RegisterScreen = () => {
           </View>
         </View>
         <View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Login");
+            }}
+          >
             <View
               style={{
                 ...styles.button,
