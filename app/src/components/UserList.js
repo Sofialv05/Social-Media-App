@@ -9,14 +9,14 @@ const UserList = ({ username, name, navigation, route, userId }) => {
         navigation.push("Profile", { userId });
       }}
     >
-      <View style={{ flex: 4, flexDirection: "row", alignItems: "center" }}>
+      <View style={styles.container}>
         <Image
           style={styles.profile}
           source={require("../assets/new-user.png")}
         />
-        <View style={{ bottom: 6 }}>
-          <Text style={{ fontWeight: "700", fontSize: 18 }}>{username}</Text>
-          <Text style={{ fontSize: 15 }}>{name}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.username}>{username}</Text>
+          <Text style={styles.name}>{name}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -24,13 +24,27 @@ const UserList = ({ username, name, navigation, route, userId }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: "auto",
+    marginVertical: 10,
+  },
   profile: {
     width: 60,
     height: 60,
-    borderRadius: 25,
-    borderWidth: 3,
-    marginBottom: 10,
-    marginRight: 20,
+    marginRight: 10,
+  },
+  textContainer: {
+    flexDirection: "column",
+    marginLeft: 10,
+  },
+  username: {
+    fontWeight: "700",
+    fontSize: 18,
+  },
+  name: {
+    fontSize: 15,
   },
 });
 

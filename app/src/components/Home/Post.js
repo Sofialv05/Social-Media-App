@@ -15,6 +15,7 @@ const Post = ({ post, navigation, handleOpenSheet }) => {
       </View>
 
       <PostFooter
+        postId={post._id}
         username={post.author.username}
         likes={post.likes}
         content={post.content}
@@ -41,6 +42,7 @@ const PostHeader = ({ username }) => {
 };
 
 const PostFooter = ({
+  postId,
   username,
   likes,
   content,
@@ -48,6 +50,7 @@ const PostFooter = ({
   navigation,
   handleOpenSheet,
 }) => {
+  // console.log(postId);
   return (
     <View style={{ marginHorizontal: 15 }}>
       <View
@@ -62,7 +65,7 @@ const PostFooter = ({
           </TouchableOpacity>
         </View>
         <View>
-          <TouchableOpacity onPress={handleOpenSheet}>
+          <TouchableOpacity onPress={() => handleOpenSheet(postId)}>
             <Ionicons
               name="chatbubble-outline"
               size={24}
@@ -90,6 +93,7 @@ const PostFooter = ({
         </Text>
       </View>
       <Comment
+        postId={postId}
         comments={comments}
         navigation={navigation}
         handleOpenSheet={handleOpenSheet}
@@ -98,12 +102,12 @@ const PostFooter = ({
   );
 };
 
-const Comment = ({ comments, navigation, handleOpenSheet }) => {
+const Comment = ({ postId, comments, navigation, handleOpenSheet }) => {
   {
     if (comments.length !== 0) {
       return (
         <View>
-          <TouchableOpacity onPress={handleOpenSheet}>
+          <TouchableOpacity onPress={() => handleOpenSheet(postId)}>
             <Text style={{ color: "gray" }}>
               {comments.length == 1
                 ? `View ${comments.length} comment`

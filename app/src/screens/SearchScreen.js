@@ -1,12 +1,27 @@
-import { View, Text, TextInput, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import PostGrid from "../components/PostGrid";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SearchBar } from "react-native-elements";
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@apollo/client";
+import { GET_USERS } from "../queries/user";
+import UserList from "../components/UserList";
+import { FlatList } from "react-native-gesture-handler";
 
-const SearchScreen = () => {
+const SearchScreen = ({ navigation }) => {
   const [query, setQuery] = useState("");
+  const { loading, error, data } = useQuery(GET_USERS, {
+    variables: {
+      search: query,
+    },
+  });
 
   const updateSearch = (query) => {
     setQuery(query);
@@ -38,7 +53,34 @@ const SearchScreen = () => {
             <Ionicons name="arrow-back-outline" size={24} color="gray" />
           }
         />
-        <PostGrid />
+        {/* <PostGrid /> */}
+        <View style={{ margin: 20 }}>
+          {loading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator size={"medium"} />
+            </View>
+          ) : (
+            <FlatList
+              data={data.findUsers}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item, index }) => (
+                <UserList
+                  username={item.username}
+                  key={index}
+                  name={item.name}
+                  userId={item._id}
+                  navigation={navigation}
+                />
+              )}
+            />
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

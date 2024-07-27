@@ -101,3 +101,15 @@ query Profile($userId: String!, $followerUserId: String!, $followingUserId: Stri
 }
 
 `;
+
+export const GET_USERS = gql`
+query users($search: String) {
+  findUsers(search: $search) {
+    _id
+    name
+    username
+    email
+    password
+  }
+}
+`;

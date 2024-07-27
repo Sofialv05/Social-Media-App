@@ -8,7 +8,7 @@ const Logo = () => {
       <TouchableOpacity>
         <Image
           style={styles.logo}
-          source={require("../../assets/instagram.png")}
+          source={require("../../assets/instafake.png")}
         />
       </TouchableOpacity>
     </View>
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   logo: {
-    width: 130,
-    height: 65,
+    width: 120,
+    height: 60,
     right: 8,
     resizeMode: "contain",
   },

@@ -3,29 +3,53 @@ import {
   FlatList,
   SafeAreaView,
   ScrollView,
+  TextInput,
   View,
 } from "react-native";
 import { StyleSheet, Text } from "react-native";
 import Stories from "../components/Home/Stories";
 import Post from "../components/Home/Post";
 import { useQuery } from "@apollo/client";
-import { GET_POSTS } from "../queries/post";
-import React, { useCallback, useMemo, useRef } from "react";
+import { GET_POST_ID, GET_POSTS } from "../queries/post";
+import React, {
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import HomeHeader from "../components/header/HomeHeader";
+import { Divider } from "react-native-elements";
+import { GlobalStateContext } from "../../contexts/GlobalContext";
+import CommentList from "../components/CommentList";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function HomeScreen({ navigation }) {
+  const { postId, setPostId } = useContext(GlobalStateContext);
+  const [comment, setComment] = useState("");
   const { loading, error, data } = useQuery(GET_POSTS);
-
+  const {
+    loading: loadingPost,
+    error: errorPost,
+    data: dataPost,
+  } = useQuery(GET_POST_ID, {
+    variables: {
+      postId,
+    },
+  });
   /* Bottom Sheet */
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["50%", "95%"], []);
-  const handleOpenSheet = () => bottomSheetRef.current?.snapToIndex(0);
+  const handleOpenSheet = (id) => {
+    setPostId(id);
+    bottomSheetRef.current?.snapToIndex(0);
+    // console.log(postId);
+  };
   const renderBackDrop = useCallback((props) => (
     <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
   ));
   /* Bottom Sheet */
-
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -49,28 +73,68 @@ export default function HomeScreen({ navigation }) {
                 key={index}
                 navigation={navigation}
                 handleOpenSheet={handleOpenSheet}
-                t
               />
             )}
           />
         </View>
+      </ScrollView>
 
-        <BottomSheet
-          ref={bottomSheetRef}
-          snapPoints={snapPoints}
-          index={-1}
-          enablePanDownToClose={true}
-          backdropComponent={renderBackDrop}
-        >
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        index={-1}
+        enablePanDownToClose={true}
+        backdropComponent={renderBackDrop}
+      >
+        <View style={{ flex: 1, justifyContent: "space-between" }}>
           <View>
             <Text
-              style={{ fontWeight: "600", fontSize: 20, alignSelf: "center" }}
+              style={{
+                fontWeight: "600",
+                fontSize: 18,
+                alignSelf: "center",
+                marginBottom: 10,
+              }}
             >
               Comments
             </Text>
+            <Divider />
+            {loadingPost ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator size={"large"} />
+              </View>
+            ) : (
+              <FlatList
+                data={dataPost.findPostById.comments}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => (
+                  <CommentList
+                    key={index}
+                    username={item.username}
+                    comment={item.content}
+                  />
+                )}
+              />
+            )}
           </View>
-        </BottomSheet>
-      </ScrollView>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Add a comment..."
+              value={comment}
+              onChangeText={(comment) => setComment(comment)}
+            />
+            <MaterialCommunityIcons name="send" size={24} color="black" />
+          </View>
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 }
@@ -82,5 +146,19 @@ const styles = StyleSheet.create({
   },
   posts: {
     marginVertical: 10,
+  },
+  inputContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTopColor: "silver",
+    borderTopWidth: 1,
+    paddingHorizontal: 10,
+  },
+  input: {
+    width: "90%",
+    height: 50,
+    paddingHorizontal: 20,
   },
 });
