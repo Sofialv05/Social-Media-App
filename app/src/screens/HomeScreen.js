@@ -33,39 +33,41 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <HomeHeader />
-      <Stories />
-      <View style={styles.posts}>
-        <FlatList
-          data={data.findPosts}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item, index }) => (
-            <Post
-              post={item}
-              key={index}
-              navigation={navigation}
-              handleOpenSheet={handleOpenSheet}
-              t
-            />
-          )}
-        />
-      </View>
-
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        index={-1}
-        enablePanDownToClose={true}
-        backdropComponent={renderBackDrop}
-      >
-        <View>
-          <Text
-            style={{ fontWeight: "600", fontSize: 20, alignSelf: "center" }}
-          >
-            Comments
-          </Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <HomeHeader />
+        <Stories />
+        <View style={styles.posts}>
+          <FlatList
+            data={data.findPosts}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item, index }) => (
+              <Post
+                post={item}
+                key={index}
+                navigation={navigation}
+                handleOpenSheet={handleOpenSheet}
+                t
+              />
+            )}
+          />
         </View>
-      </BottomSheet>
+
+        <BottomSheet
+          ref={bottomSheetRef}
+          snapPoints={snapPoints}
+          index={-1}
+          enablePanDownToClose={true}
+          backdropComponent={renderBackDrop}
+        >
+          <View>
+            <Text
+              style={{ fontWeight: "600", fontSize: 20, alignSelf: "center" }}
+            >
+              Comments
+            </Text>
+          </View>
+        </BottomSheet>
+      </ScrollView>
     </SafeAreaView>
   );
 }

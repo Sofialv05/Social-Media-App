@@ -1,29 +1,91 @@
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Divider } from "react-native-elements";
 import PostGrid from "../components/PostGrid";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { Ionicons } from "@expo/vector-icons";
+import { AuthContext } from "../../contexts/AuthContext";
+import * as SecureStore from "expo-secure-store";
 
 const UserProfile = () => {
+  const { setIsSignedIn } = useContext(AuthContext);
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => ["18%"], []);
+
+  const handleOpenSheet = () => bottomSheetRef.current?.snapToIndex(0);
+  const renderBackDrop = useCallback((props) => (
+    <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
+  ));
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.container}>
-          <Header />
+          <Header handleOpenSheet={handleOpenSheet} />
           <Profile />
           <ProfileInfo />
         </SafeAreaView>
         <Divider width={1} />
         <PostGrid />
       </ScrollView>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        index={-1}
+        enablePanDownToClose={true}
+        backdropComponent={renderBackDrop}
+      >
+        <TouchableOpacity
+          onPress={async () => {
+            setIsSignedIn(false);
+            await SecureStore.deleteItemAsync("username");
+            await SecureStore.deleteItemAsync("accessToken");
+          }}
+        >
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "red",
+              margin: 40,
+              borderRadius: 10,
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "600",
+                fontSize: 20,
+                alignSelf: "center",
+                color: "white",
+              }}
+            >
+              Logout
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </BottomSheet>
     </View>
   );
 };
 
-const Header = () => {
+const Header = ({ handleOpenSheet }) => {
   return (
     <View style={styles.header}>
-      <Text style={{ fontSize: 20, fontWeight: "600" }}>Username</Text>
+      <TouchableOpacity>
+        <Text style={{ fontSize: 20, fontWeight: "600" }}>Username</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleOpenSheet}>
+        <Ionicons name="person-sharp" size={24} color="black" />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -76,7 +138,9 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 70,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
   },
   profile: {
     width: 70,

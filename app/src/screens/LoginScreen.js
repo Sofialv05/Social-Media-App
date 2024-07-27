@@ -8,11 +8,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../mutations/auth";
+import { AuthContext } from "../../contexts/AuthContext";
+import * as SecureStore from "expo-secure-store";
 
 const LoginScreen = ({ navigation }) => {
+  const { setIsSignedIn } = useContext(AuthContext);
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -51,13 +54,24 @@ const LoginScreen = ({ navigation }) => {
             <View>
               <TouchableOpacity
                 onPress={async () => {
-                  await loginFn({
+                  const result = await loginFn({
                     variables: {
-                      username: form.username,
-                      password: form.password,
+                      inputLogin: {
+                        username: form.username,
+                        password: form.password,
+                      },
                     },
                   });
-                  navigation.replace("Home");
+                  console.log(result);
+                  setIsSignedIn(true);
+                  await SecureStore.setItemAsync(
+                    "accessToken",
+                    result.data.login.token
+                  );
+                  await SecureStore.setItemAsync(
+                    "username",
+                    result.data.login.username
+                  );
                 }}
               >
                 <View style={{ ...styles.button, backgroundColor: "#075eec" }}>

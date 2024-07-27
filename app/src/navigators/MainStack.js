@@ -1,9 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HomeScreen from "../screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Logo from "../components/header/Logo";
-import Icon from "../components/header/Icon";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import {
@@ -19,6 +17,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import Post from "../components/Home/Post";
 import { AuthContext } from "../../contexts/AuthContext";
+import * as SecureStore from "expo-secure-store";
+import { ActivityIndicator, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -86,8 +86,27 @@ const MainTab = () => {
   );
 };
 
-const MainStack = (props) => {
-  const { isSignedIn } = useContext(AuthContext);
+const MainStack = () => {
+  const { isSignedIn, setIsSignedIn } = useContext(AuthContext);
+  const [fetchTokenLoading, setFetchTokenLoading] = useState(true);
+
+  useEffect(() => {
+    SecureStore.getItemAsync("accessToken").then((accessToken) => {
+      if (accessToken) {
+        setIsSignedIn(true);
+      }
+
+      setFetchTokenLoading(false);
+    });
+  });
+
+  if (fetchTokenLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size={"large"} />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer>
