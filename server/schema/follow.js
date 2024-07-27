@@ -41,6 +41,8 @@ type Message {
 type Query {
     findAllFollowers: [Follower]
     findAllFollowing: [Following]
+    findAllFollowersById(userId: String!): [Follower]
+    findAllFollowingById(userId: String!): [Following]
 }
 
 type Mutation {

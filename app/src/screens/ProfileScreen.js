@@ -11,26 +11,21 @@ import React, { useCallback, useContext, useMemo, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Divider } from "react-native-elements";
 import PostGrid from "../components/PostGrid";
-import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { Ionicons } from "@expo/vector-icons";
-import { AuthContext } from "../../contexts/AuthContext";
-import * as SecureStore from "expo-secure-store";
 import { useQuery } from "@apollo/client";
-import { GET_USERLOGIN_PROFILE } from "../queries/user";
-import client from "../config/apolloConnection";
+import { GET_USER_PROFILE } from "../queries/user";
+import { Ionicons } from "@expo/vector-icons";
 
-const UserProfile = ({ navigation }) => {
-  const { loading, error, data } = useQuery(GET_USERLOGIN_PROFILE);
-  const { setIsSignedIn } = useContext(AuthContext);
-
-  /* Bottom Sheet */
-  const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["18%"], []);
-  const handleOpenSheet = () => bottomSheetRef.current?.snapToIndex(0);
-  const renderBackDrop = useCallback((props) => (
-    <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
-  ));
-  /* Bottom Sheet */
+const ProfileScreen = ({ route, navigation }) => {
+  const { userId } = route.params;
+  const { loading, error, data } = useQuery(GET_USER_PROFILE, {
+    variables: {
+      userId: userId,
+      followingUserId: userId,
+      followerUserId: userId,
+      PostUserId: userId,
+    },
+  });
+  //   console.log(data);
 
   if (loading) {
     return (
@@ -40,82 +35,40 @@ const UserProfile = ({ navigation }) => {
     );
   }
 
-  const handleLogout = async () => {
-    try {
-      await SecureStore.deleteItemAsync("username");
-      await SecureStore.deleteItemAsync("accessToken");
-
-      setIsSignedIn(false);
-      await client.resetStore();
-      await client.cache.reset();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.container}>
           <Header
-            username={data.findUserProfile.username}
-            handleOpenSheet={handleOpenSheet}
-          />
-          <Profile
-            posts={data.findPostByAuthorId}
-            followers={data.findAllFollowers}
-            following={data.findAllFollowing}
+            username={data.findUserById.username}
             navigation={navigation}
           />
-          <ProfileInfo name={data.findUserProfile.name} />
+          <Profile
+            posts={data.findPostUser}
+            followers={data.findAllFollowersById}
+            following={data.findAllFollowingById}
+            navigation={navigation}
+          />
+          <ProfileInfo name={data.findUserById.name} />
         </SafeAreaView>
         <Divider width={1} />
-        <PostGrid postImages={data.findPostByAuthorId} />
+        <PostGrid postImages={data.findPostUser} />
       </ScrollView>
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        index={-1}
-        enablePanDownToClose={true}
-        backdropComponent={renderBackDrop}
-      >
-        <TouchableOpacity onPress={handleLogout}>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "red",
-              margin: 40,
-              borderRadius: 10,
-              padding: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: "600",
-                fontSize: 20,
-                alignSelf: "center",
-                color: "white",
-              }}
-            >
-              Logout
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </BottomSheet>
     </View>
   );
 };
 
-const Header = ({ handleOpenSheet, username }) => {
+const Header = ({ username, navigation }) => {
   return (
     <View style={styles.header}>
-      <TouchableOpacity>
-        <Text style={{ fontSize: 20, fontWeight: "600" }}>{username}</Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+      >
+        <Ionicons name="arrow-back-outline" size={24} color="black" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleOpenSheet}>
-        <Ionicons name="person-sharp" size={24} color="black" />
-      </TouchableOpacity>
+      <Text style={{ fontSize: 20, fontWeight: "600" }}>{username}</Text>
     </View>
   );
 };
@@ -131,17 +84,17 @@ const Profile = ({ posts, followers, following, navigation }) => {
       </View>
       <View style={{ flex: 7, flexDirection: "row" }}>
         <View style={styles.info}>
-          <TouchableOpacity>
+          <View>
             <Text
               style={{ fontSize: 18, fontWeight: "600", alignSelf: "center" }}
             >
               {posts.length}
             </Text>
             <Text style={{ fontSize: 14 }}>posts</Text>
-          </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.info}>
-          <TouchableOpacity
+          <View
             onPress={() => {
               navigation.push("Followers");
             }}
@@ -152,10 +105,10 @@ const Profile = ({ posts, followers, following, navigation }) => {
               {followers.length}
             </Text>
             <Text style={{ fontSize: 14 }}>followers</Text>
-          </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.info}>
-          <TouchableOpacity
+          <View
             onPress={() => {
               navigation.push("Following");
             }}
@@ -166,7 +119,7 @@ const Profile = ({ posts, followers, following, navigation }) => {
               {following.length}
             </Text>
             <Text style={{ fontSize: 14 }}>following</Text>
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -194,7 +147,7 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 70,
-    justifyContent: "space-between",
+    gap: 20,
     alignItems: "center",
     flexDirection: "row",
   },
@@ -211,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserProfile;
+export default ProfileScreen;

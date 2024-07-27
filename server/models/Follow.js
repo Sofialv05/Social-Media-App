@@ -33,7 +33,6 @@ class Follow {
       {
         $project: {
           "follower.password": 0,
-          "follower._id": 0,
         },
       },
       {
@@ -66,7 +65,6 @@ class Follow {
       {
         $project: {
           "following.password": 0,
-          "following._id": 0,
         },
       },
       {

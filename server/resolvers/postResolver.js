@@ -22,6 +22,13 @@ const resolvers = {
 
       return posts;
     },
+    findPostUser: async (_, { userId }, contextValue) => {
+      const user = contextValue.authentication();
+
+      const posts = await Post.findPostByAuthorId(userId);
+
+      return posts;
+    },
 
     findPostById: async (_, { postId }) => {
       const post = await Post.findPostById(postId);

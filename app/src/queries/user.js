@@ -13,11 +13,9 @@ query UserProfile {
     followingId
     followerId
     follower {
-      _id
       name
       username
       email
-      password
     }
     createdAt
     updatedAt
@@ -26,11 +24,9 @@ query UserProfile {
     _id
     followingId
     following {
-      _id
       name
       username
       email
-      password
     }
     followerId
     createdAt
@@ -43,3 +39,65 @@ query UserProfile {
     updatedAt
   }
 }`;
+
+export const GET_USER_PROFILE = gql`
+query Profile($userId: String!, $followerUserId: String!, $followingUserId: String!, $PostUserId: String!) {
+
+  findUserById(userId: $userId) {
+    _id
+    name
+    username
+    email
+  }
+  findAllFollowersById(userId: $followerUserId) {
+    _id
+    followingId
+    followerId
+    follower {
+      _id
+      name
+      username
+    }
+    createdAt
+    updatedAt
+  }
+  findAllFollowingById(userId: $followingUserId) {
+    _id
+    followingId
+    following {
+      _id
+      name
+      username
+    }
+    followerId
+    createdAt
+    updatedAt
+  }
+  findPostUser(userId: $PostUserId) {
+    _id
+    content
+    tags
+    imgUrl
+    authorId
+    author {
+      name
+      username
+      email
+    }
+    comments {
+      content
+      username
+      createdAt
+      updatedAt
+    }
+    likes {
+      username
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+`;

@@ -55,6 +55,7 @@ type Query {
     findPosts(search: String): [Post]
     findPostById(postId: String!): Post
     findPostByAuthorId: [Post]
+    findPostUser(userId: String!): [Post]
 }
 
 type Mutation {

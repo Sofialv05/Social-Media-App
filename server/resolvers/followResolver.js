@@ -16,6 +16,20 @@ const resolvers = {
 
       return following;
     },
+    findAllFollowersById: async (_, { userId }, contextValue) => {
+      const user = contextValue.authentication();
+
+      const followers = await Follow.findFollowers(userId);
+
+      return followers;
+    },
+    findAllFollowingById: async (_, { userId }, contextValue) => {
+      const user = contextValue.authentication();
+
+      const following = await Follow.findFollowing(userId);
+
+      return following;
+    },
   },
   Mutation: {
     followUser: async (_, { inputFollow }, contextValue) => {

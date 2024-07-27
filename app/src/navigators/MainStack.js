@@ -19,6 +19,8 @@ import Post from "../components/Home/Post";
 import { AuthContext } from "../../contexts/AuthContext";
 import * as SecureStore from "expo-secure-store";
 import { ActivityIndicator, View } from "react-native";
+import { FollowerScreen, FollowingScreen } from "../screens/FollowScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -134,6 +136,25 @@ const MainStack = () => {
             <Stack.Screen
               name="Post"
               component={Post}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Followers"
+              component={FollowerScreen}
+              options={{
+                headerTitle: SecureStore.getItem("username") + " followers",
+              }}
+            />
+            <Stack.Screen
+              name="Following"
+              component={FollowingScreen}
+              options={{
+                headerTitle: SecureStore.getItem("username") + " following",
+              }}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={ProfileScreen}
               options={{ headerShown: false }}
             />
           </>
