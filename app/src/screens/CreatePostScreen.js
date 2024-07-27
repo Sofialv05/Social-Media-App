@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 
 const CreatePostScreen = (props) => {
-  console.log(props);
+  // console.log(props);
   return (
     <SafeAreaView>
       <Feather

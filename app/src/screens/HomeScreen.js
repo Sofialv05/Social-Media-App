@@ -16,12 +16,15 @@ import HomeHeader from "../components/header/HomeHeader";
 
 export default function HomeScreen({ navigation }) {
   const { loading, error, data } = useQuery(GET_POSTS);
+
+  /* Bottom Sheet */
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["50%", "95%"], []);
   const handleOpenSheet = () => bottomSheetRef.current?.snapToIndex(0);
   const renderBackDrop = useCallback((props) => (
     <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
   ));
+  /* Bottom Sheet */
 
   if (loading) {
     return (

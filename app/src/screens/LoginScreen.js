@@ -23,6 +23,26 @@ const LoginScreen = ({ navigation }) => {
 
   const [loginFn, { data, error, loading }] = useMutation(LOGIN);
 
+  const handleLogin = async () => {
+    const result = await loginFn({
+      variables: {
+        inputLogin: {
+          username: form.username,
+          password: form.password,
+        },
+      },
+    });
+
+    try {
+      // console.log(result);
+      await SecureStore.setItemAsync("accessToken", result.data.login.token);
+      await SecureStore.setItemAsync("username", result.data.login.username);
+      setIsSignedIn(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ backgroundColor: "#ebecf4", flex: 1 }}>
       <View style={styles.container}>
@@ -52,28 +72,7 @@ const LoginScreen = ({ navigation }) => {
               onChangeText={(password) => setForm({ ...form, password })}
             />
             <View>
-              <TouchableOpacity
-                onPress={async () => {
-                  const result = await loginFn({
-                    variables: {
-                      inputLogin: {
-                        username: form.username,
-                        password: form.password,
-                      },
-                    },
-                  });
-                  console.log(result);
-                  setIsSignedIn(true);
-                  await SecureStore.setItemAsync(
-                    "accessToken",
-                    result.data.login.token
-                  );
-                  await SecureStore.setItemAsync(
-                    "username",
-                    result.data.login.username
-                  );
-                }}
-              >
+              <TouchableOpacity onPress={handleLogin}>
                 <View style={{ ...styles.button, backgroundColor: "#075eec" }}>
                   {loading ? (
                     <ActivityIndicator />
