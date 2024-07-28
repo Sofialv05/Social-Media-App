@@ -39,11 +39,7 @@ export default function HomeScreen({ navigation }) {
   const { loading, error, data, refetch: refetchPost } = useQuery(GET_POSTS);
   const [
     commentFn,
-    {
-      data: dataComment,
-      error: errorComment,
-      loading: setFetchTokenLoadingComment,
-    },
+    { data: dataComment, error: errorComment, loading: loadingComment },
   ] = useMutation(ADD_COMMENT);
   const [likeFn, { data: dataLike, error: errorLike, loading: loadingLike }] =
     useMutation(LIKE_POST);
@@ -80,7 +76,7 @@ export default function HomeScreen({ navigation }) {
   }
 
   const handleComment = async () => {
-    await commentFn({
+    const result = await commentFn({
       variables: {
         inputComment: {
           postId,
@@ -89,18 +85,22 @@ export default function HomeScreen({ navigation }) {
       },
     });
     setComment("");
-    refetch();
+    if (result) {
+      refetch();
+    }
   };
 
   const handleLike = async () => {
-    await likeFn({
+    const result = await likeFn({
       variables: {
         inputLike: {
           postId,
         },
       },
     });
-    refetchPost();
+    if (result) {
+      refetchPost();
+    }
   };
 
   return (

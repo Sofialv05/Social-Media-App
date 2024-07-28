@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
+import { REGISTER } from "../../mutations/auth";
+import { useMutation } from "@apollo/client";
 
 const RegisterScreen = ({ navigation }) => {
   const [form, setForm] = useState({
@@ -17,6 +19,26 @@ const RegisterScreen = ({ navigation }) => {
     password: "",
     confirmPassword: "",
   });
+  const [registerFn, { data, error, loading }] = useMutation(REGISTER);
+
+  const handleRegister = async () => {
+    const result = await registerFn({
+      variables: {
+        inputUser: {
+          username: form.username,
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          confirmPassword: form.confirmPassword,
+        },
+      },
+    });
+    console.log(result);
+    if (result) {
+      navigation.replace("Login");
+    }
+  };
+
   return (
     <SafeAreaView style={{ backgroundColor: "#ebecf4", flex: 1 }}>
       <View style={styles.container}>
@@ -29,7 +51,6 @@ const RegisterScreen = ({ navigation }) => {
           </View>
           <View>
             <TextInput
-              secureTextEntry
               style={styles.input}
               value={form.name}
               placeholder="Name"
@@ -46,7 +67,6 @@ const RegisterScreen = ({ navigation }) => {
               onChangeText={(username) => setForm({ ...form, username })}
             />
             <TextInput
-              secureTextEntry
               style={styles.input}
               value={form.email}
               placeholder="Email"
@@ -72,7 +92,7 @@ const RegisterScreen = ({ navigation }) => {
               }
             />
             <View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleRegister}>
                 <View style={{ ...styles.button, backgroundColor: "#075eec" }}>
                   <Text
                     style={{ color: "white", fontWeight: "500", fontSize: 18 }}
