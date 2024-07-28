@@ -21,6 +21,7 @@ import * as SecureStore from "expo-secure-store";
 import { ActivityIndicator, View } from "react-native";
 import { FollowerScreen, FollowingScreen } from "../screens/FollowScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import PostDetailScreen from "../screens/PostDetailScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -156,6 +157,13 @@ const MainStack = () => {
               name="Profile"
               component={ProfileScreen}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Detail"
+              component={PostDetailScreen}
+              options={{
+                headerTitle: SecureStore.getItem("username") + " post detail",
+              }}
             />
           </>
         )}

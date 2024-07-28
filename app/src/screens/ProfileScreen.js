@@ -52,7 +52,7 @@ const ProfileScreen = ({ route, navigation }) => {
           <ProfileInfo name={data.findUserById.name} />
         </SafeAreaView>
         <Divider width={1} />
-        <PostGrid postImages={data.findPostUser} />
+        <PostGrid postImages={data.findPostUser} navigation={navigation} />
       </ScrollView>
     </View>
   );

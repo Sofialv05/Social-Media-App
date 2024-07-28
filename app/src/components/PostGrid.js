@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 
-const PostGrid = ({ postImages }) => {
+const PostGrid = ({ postImages, navigation }) => {
   return (
     <View style={{ backgroundColor: "white", height: "100%" }}>
       <FlatList
@@ -15,7 +15,11 @@ const PostGrid = ({ postImages }) => {
         numColumns={3}
         keyExtractor={(item) => item.id}
         renderItem={({ index, item }) => (
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.push("Detail", { postId: item._id });
+            }}
+          >
             <ImagePosts key={index} imgUrl={item.imgUrl} />
           </TouchableOpacity>
         )}

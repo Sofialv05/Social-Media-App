@@ -70,7 +70,10 @@ const UserProfile = ({ navigation }) => {
           <ProfileInfo name={data.findUserProfile.name} />
         </SafeAreaView>
         <Divider width={1} />
-        <PostGrid postImages={data.findPostByAuthorId} />
+        <PostGrid
+          postImages={data.findPostByAuthorId}
+          navigation={navigation}
+        />
       </ScrollView>
       <BottomSheet
         ref={bottomSheetRef}
