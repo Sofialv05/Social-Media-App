@@ -43,14 +43,14 @@ const PostDetailScreen = ({ route, navigation }) => {
 
   /* Bottom Sheet */
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["50%", "95%"], []);
+  const snapPoints = useMemo(() => ["60%"], []);
   const handleOpenSheet = (id) => {
     setPostId(id);
     bottomSheetRef.current?.snapToIndex(0);
     // console.log(postId);
   };
   const renderBackDrop = useCallback((props) => (
-    <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
+    <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
   ));
   /* Bottom Sheet */
 
