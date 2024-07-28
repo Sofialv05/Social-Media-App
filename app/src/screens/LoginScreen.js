@@ -7,12 +7,14 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../../mutations/auth";
 import { AuthContext } from "../../contexts/AuthContext";
 import * as SecureStore from "expo-secure-store";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = ({ navigation }) => {
   const { setIsSignedIn } = useContext(AuthContext);
@@ -24,22 +26,32 @@ const LoginScreen = ({ navigation }) => {
   const [loginFn, { data, error, loading }] = useMutation(LOGIN);
 
   const handleLogin = async () => {
-    const result = await loginFn({
-      variables: {
-        inputLogin: {
-          username: form.username,
-          password: form.password,
-        },
-      },
-    });
-
     try {
+      const result = await loginFn({
+        variables: {
+          inputLogin: {
+            username: form.username,
+            password: form.password,
+          },
+        },
+      });
+
       // console.log(result);
+
       await SecureStore.setItemAsync("accessToken", result.data.login.token);
       await SecureStore.setItemAsync("username", result.data.login.username);
       setIsSignedIn(true);
     } catch (error) {
-      console.error(error);
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: error.message || error.toString(),
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
+        },
+      });
     }
   };
 

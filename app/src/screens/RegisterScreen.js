@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import { REGISTER } from "../../mutations/auth";
 import { useMutation } from "@apollo/client";
+import Toast from "react-native-toast-message";
 
 const RegisterScreen = ({ navigation }) => {
   const [form, setForm] = useState({
@@ -19,23 +20,45 @@ const RegisterScreen = ({ navigation }) => {
     password: "",
     confirmPassword: "",
   });
-  const [registerFn, { data, error, loading }] = useMutation(REGISTER);
+  const [registerFn, {}] = useMutation(REGISTER);
 
   const handleRegister = async () => {
-    const result = await registerFn({
-      variables: {
-        inputUser: {
-          username: form.username,
-          name: form.name,
-          email: form.email,
-          password: form.password,
-          confirmPassword: form.confirmPassword,
+    try {
+      const result = await registerFn({
+        variables: {
+          inputUser: {
+            username: form.username,
+            name: form.name,
+            email: form.email,
+            password: form.password,
+            confirmPassword: form.confirmPassword,
+          },
         },
-      },
-    });
-    console.log(result);
-    if (result) {
-      navigation.replace("Login");
+      });
+      // console.log(result);
+      if (result) {
+        Toast.show({
+          type: "success",
+          text1: result.data.register.message,
+          text1Style: {
+            fontSize: 16,
+            fontWeight: "500",
+            color: "green",
+          },
+        });
+        navigation.replace("Login");
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: error.message || error.toString(),
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
+        },
+      });
     }
   };
 

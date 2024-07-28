@@ -8,7 +8,7 @@ const UserValidation = z.object({
     .email({ message: "invalid email address" }),
   password: z
     .string({ required_error: "password is required" })
-    .min(5, { message: "password must contain at least 5 characters" }),
+    .min(5, { message: "min. password: 5 characters" }),
 });
 
 export default UserValidation;

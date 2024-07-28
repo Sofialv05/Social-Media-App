@@ -18,6 +18,7 @@ import * as SecureStore from "expo-secure-store";
 import { useQuery } from "@apollo/client";
 import { GET_USERLOGIN_PROFILE } from "../queries/user";
 import client from "../config/apolloConnection";
+import Toast from "react-native-toast-message";
 
 const UserProfile = ({ navigation }) => {
   const { loading, error, data } = useQuery(GET_USERLOGIN_PROFILE);

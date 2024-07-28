@@ -65,7 +65,7 @@ const MainTab = () => {
         name="AddPost"
         component={CreatePostScreen}
         options={{
-          headerShown: false,
+          headerTitle: "Create Post",
           tabBarIcon: ({ focused, color, size }) => {
             if (focused) {
               return <MaterialIcons name="add-box" size={29} color="black" />;

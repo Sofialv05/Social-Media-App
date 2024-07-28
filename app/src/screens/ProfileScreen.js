@@ -14,6 +14,7 @@ import PostGrid from "../components/PostGrid";
 import { useQuery } from "@apollo/client";
 import { GET_USER_PROFILE } from "../queries/user";
 import { Ionicons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 const ProfileScreen = ({ route, navigation }) => {
   const { userId } = route.params;
@@ -33,6 +34,12 @@ const ProfileScreen = ({ route, navigation }) => {
         <ActivityIndicator size={"large"} />
       </View>
     );
+  }
+
+  if (error) {
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text>An Error Occured</Text>
+    </View>;
   }
 
   return (

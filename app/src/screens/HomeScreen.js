@@ -76,17 +76,31 @@ export default function HomeScreen({ navigation }) {
   }
 
   const handleComment = async () => {
-    const result = await commentFn({
-      variables: {
-        inputComment: {
-          postId,
-          content: comment,
+    try {
+      if (comment) {
+        const result = await commentFn({
+          variables: {
+            inputComment: {
+              postId,
+              content: comment,
+            },
+          },
+        });
+        setComment("");
+        if (result) {
+          refetch();
+        }
+      }
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: error.message || error.toString(),
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
         },
-      },
-    });
-    setComment("");
-    if (result) {
-      refetch();
+      });
     }
   };
 
