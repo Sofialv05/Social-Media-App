@@ -26,7 +26,7 @@ const UserProfile = ({ navigation }) => {
 
   /* Bottom Sheet */
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => ["18%"], []);
+  const snapPoints = useMemo(() => ["20%"], []);
   const handleOpenSheet = () => bottomSheetRef.current?.snapToIndex(0);
   const renderBackDrop = useCallback(
     (props) => (
@@ -101,7 +101,8 @@ const UserProfile = ({ navigation }) => {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "red",
-              margin: 40,
+              marginVertical: 30,
+              marginHorizontal: 20,
               borderRadius: 10,
               padding: 10,
             }}

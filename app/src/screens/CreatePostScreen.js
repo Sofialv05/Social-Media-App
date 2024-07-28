@@ -30,7 +30,7 @@ const CreatePostScreen = ({ navigation }) => {
     console.log(result.assets[0].uri);
     setImage(result.assets[0].uri);
   };
-  console.log(UPLOAD_PRESET);
+
   const uploadImageToCloudinary = async (uri) => {
     const data = new FormData();
     data.append("file", {
