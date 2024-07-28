@@ -126,7 +126,9 @@ const CreatePostScreen = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <View style={styles.inputWrapper}>
             <TextInput
-              style={styles.input}
+              multiline={true}
+              numberOfLines={6}
+              style={{ ...styles.input, textAlignVertical: "top" }}
               onChangeText={(value) => setContent(value)}
               placeholder="Add Caption"
             />
