@@ -16,3 +16,11 @@ mutation LikePost($inputLike: NewLike) {
   }
 }
 `;
+
+export const ADD_POST = gql`
+mutation AddPost($inputPost: NewPost) {
+  addPost(inputPost: $inputPost) {
+    message
+  }
+}
+`;

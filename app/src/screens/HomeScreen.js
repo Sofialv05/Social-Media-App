@@ -104,16 +104,18 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-  const handleLike = async () => {
-    const result = await likeFn({
-      variables: {
-        inputLike: {
-          postId,
+  const handleLike = async (id) => {
+    try {
+      const result = await likeFn({
+        variables: {
+          inputLike: {
+            postId: id,
+          },
         },
-      },
-    });
-    if (result) {
+      });
       refetchPost();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -122,21 +124,29 @@ export default function HomeScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <HomeHeader />
         <Stories />
-        <View style={styles.posts}>
-          <FlatList
-            data={data.findPosts}
-            keyExtractor={(item) => item._id}
-            renderItem={({ item, index }) => (
-              <Post
-                post={item}
-                key={index}
-                navigation={navigation}
-                handleOpenSheet={handleOpenSheet}
-                handleLike={handleLike}
-              />
-            )}
-          />
-        </View>
+        <ScrollView>
+          <View style={styles.posts}>
+            <FlatList
+              data={data.findPosts}
+              keyExtractor={(item) => item._id}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.push("Detail", { postId: item._id });
+                  }}
+                >
+                  <Post
+                    post={item}
+                    key={index}
+                    navigation={navigation}
+                    handleOpenSheet={handleOpenSheet}
+                    handleLike={handleLike}
+                  />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        </ScrollView>
       </ScrollView>
 
       <BottomSheet

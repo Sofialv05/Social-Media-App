@@ -18,7 +18,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Post from "../components/Home/Post";
 import { AuthContext } from "../../contexts/AuthContext";
 import * as SecureStore from "expo-secure-store";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Image, View } from "react-native";
 import { FollowerScreen, FollowingScreen } from "../screens/FollowScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import PostDetailScreen from "../screens/PostDetailScreen";
@@ -81,7 +81,12 @@ const MainTab = () => {
         component={UserProfile}
         options={{
           headerShown: false,
-          tabBarIcon: () => null,
+          tabBarIcon: () => (
+            <Image
+              style={{ width: 27, height: 27 }}
+              source={require("../assets/new-user.png")}
+            />
+          ),
           tabBarLabel: () => null,
         }}
       />
@@ -162,7 +167,7 @@ const MainStack = () => {
               name="Detail"
               component={PostDetailScreen}
               options={{
-                headerTitle: SecureStore.getItem("username") + " post detail",
+                headerTitle: "Post",
               }}
             />
           </>

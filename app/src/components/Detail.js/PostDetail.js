@@ -2,8 +2,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
+import { FlatList } from "react-native-gesture-handler";
 
-const Post = ({ post, navigation, handleOpenSheet, handleLike }) => {
+const PostDetail = ({ post, navigation, handleOpenSheet, handleLike }) => {
   return (
     <View style={{ flex: 1, marginBottom: 30 }}>
       <PostHeader username={post.author.username} />
@@ -23,6 +24,7 @@ const Post = ({ post, navigation, handleOpenSheet, handleLike }) => {
         navigation={navigation}
         handleOpenSheet={handleOpenSheet}
         handleLike={handleLike}
+        tags={post.tags}
       />
     </View>
   );
@@ -46,6 +48,7 @@ const PostFooter = ({
   postId,
   username,
   likes,
+  tags,
   content,
   comments,
   navigation,
@@ -91,17 +94,24 @@ const PostFooter = ({
           <Text style={{ ...styles.headerUsername, fontWeight: "500" }}>
             {username}
           </Text>{" "}
-          {content.length > 100
-            ? content.slice(0, 100) + "... Read More"
-            : content}
+          {content}
         </Text>
+        <View>
+          <FlatList
+            data={tags}
+            horizontal={true}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <Text
+                key={index}
+                style={{ color: "blue", fontWeight: "500", fontSize: 16 }}
+              >
+                {item}{" "}
+              </Text>
+            )}
+          />
+        </View>
       </View>
-      <Comment
-        postId={postId}
-        comments={comments}
-        navigation={navigation}
-        handleOpenSheet={handleOpenSheet}
-      />
     </View>
   );
 };
@@ -151,4 +161,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Post;
+export default PostDetail;

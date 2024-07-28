@@ -47,11 +47,9 @@ const resolvers = {
 
       const authorId = user._id;
       const post = await Post.createOnePost({ ...inputPost, authorId });
-      const postChaches = await redis.get("posts:all");
+      // const postChaches = await redis.get("posts:all");
 
-      if (postChaches) {
-        await redis.del("posts:all");
-      }
+      await redis.del("posts:all");
 
       if (post.acknowledged) {
         return { message: "Successfully add new post" };

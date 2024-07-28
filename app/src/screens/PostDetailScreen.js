@@ -30,7 +30,7 @@ import { Divider } from "react-native-elements";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CommentList from "../components/CommentList";
 import Toast from "react-native-toast-message";
-
+import PostDetail from "../components/Detail.js/PostDetail";
 const PostDetailScreen = ({ route, navigation }) => {
   const { postId, setPostId } = useContext(GlobalStateContext);
   const [comment, setComment] = useState("");
@@ -97,11 +97,11 @@ const PostDetailScreen = ({ route, navigation }) => {
     }
   };
 
-  const handleLike = async () => {
+  const handleLike = async (id) => {
     const result = await likeFn({
       variables: {
         inputLike: {
-          postId,
+          postId: id,
         },
       },
     });
@@ -115,7 +115,7 @@ const PostDetailScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.posts}>
-          <Post
+          <PostDetail
             post={data.findPostById}
             navigation={navigation}
             handleOpenSheet={handleOpenSheet}
