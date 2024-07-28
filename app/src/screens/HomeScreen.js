@@ -30,16 +30,23 @@ import { Divider } from "react-native-elements";
 import { GlobalStateContext } from "../../contexts/GlobalContext";
 import CommentList from "../components/CommentList";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { ADD_COMMENT } from "../../mutations/post";
+import { ADD_COMMENT, LIKE_POST } from "../../mutations/post";
 
 export default function HomeScreen({ navigation }) {
   const { postId, setPostId } = useContext(GlobalStateContext);
   const [comment, setComment] = useState("");
-  const { loading, error, data } = useQuery(GET_POSTS);
+
+  const { loading, error, data, refetch: refetchPost } = useQuery(GET_POSTS);
   const [
     commentFn,
-    { data: dataComment, error: errorComment, loading: Comment },
+    {
+      data: dataComment,
+      error: errorComment,
+      loading: setFetchTokenLoadingComment,
+    },
   ] = useMutation(ADD_COMMENT);
+  const [likeFn, { data: dataLike, error: errorLike, loading: loadingLike }] =
+    useMutation(LIKE_POST);
 
   const {
     loading: loadingPost,
@@ -85,6 +92,17 @@ export default function HomeScreen({ navigation }) {
     refetch();
   };
 
+  const handleLike = async () => {
+    await likeFn({
+      variables: {
+        inputLike: {
+          postId,
+        },
+      },
+    });
+    refetchPost();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -100,6 +118,7 @@ export default function HomeScreen({ navigation }) {
                 key={index}
                 navigation={navigation}
                 handleOpenSheet={handleOpenSheet}
+                handleLike={handleLike}
               />
             )}
           />

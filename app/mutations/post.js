@@ -8,3 +8,11 @@ mutation CommentPost($inputComment: NewComment) {
 }
 
 `;
+
+export const LIKE_POST = gql`
+mutation LikePost($inputLike: NewLike) {
+  likePost(inputLike: $inputLike) {
+    message
+  }
+}
+`;

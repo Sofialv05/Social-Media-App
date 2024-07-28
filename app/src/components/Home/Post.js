@@ -3,7 +3,7 @@ import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AntDesign } from "@expo/vector-icons";
 
-const Post = ({ post, navigation, handleOpenSheet }) => {
+const Post = ({ post, navigation, handleOpenSheet, handleLike }) => {
   return (
     <View style={{ flex: 1, marginBottom: 30 }}>
       <PostHeader username={post.author.username} />
@@ -22,6 +22,7 @@ const Post = ({ post, navigation, handleOpenSheet }) => {
         comments={post.comments}
         navigation={navigation}
         handleOpenSheet={handleOpenSheet}
+        handleLike={handleLike}
       />
     </View>
   );
@@ -49,6 +50,7 @@ const PostFooter = ({
   comments,
   navigation,
   handleOpenSheet,
+  handleLike,
 }) => {
   // console.log(postId);
   return (
@@ -60,7 +62,7 @@ const PostFooter = ({
         }}
       >
         <View style={{ marginRight: 18 }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleLike}>
             <AntDesign name="hearto" size={24} color="black" />
           </TouchableOpacity>
         </View>
