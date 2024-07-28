@@ -31,22 +31,18 @@ import { GlobalStateContext } from "../../contexts/GlobalContext";
 import CommentList from "../components/CommentList";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ADD_COMMENT, LIKE_POST } from "../../mutations/post";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const { postId, setPostId } = useContext(GlobalStateContext);
   const [comment, setComment] = useState("");
 
   const { loading, error, data, refetch: refetchPost } = useQuery(GET_POSTS);
-  const [
-    commentFn,
-    { data: dataComment, error: errorComment, loading: loadingComment },
-  ] = useMutation(ADD_COMMENT);
-  const [likeFn, { data: dataLike, error: errorLike, loading: loadingLike }] =
-    useMutation(LIKE_POST);
+  const [commentFn, {}] = useMutation(ADD_COMMENT);
+  const [likeFn, {}] = useMutation(LIKE_POST);
 
   const {
     loading: loadingPost,
-    error: errorPost,
     data: dataPost,
     refetch,
   } = useQuery(GET_POST_ID, {
@@ -60,13 +56,17 @@ export default function HomeScreen({ navigation }) {
   const handleOpenSheet = (id) => {
     setPostId(id);
     bottomSheetRef.current?.snapToIndex(0);
-    // console.log(postId);
   };
   const renderBackDrop = useCallback((props) => (
     <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
   ));
   /* Bottom Sheet */
 
+  useFocusEffect(
+    useCallback(() => {
+      refetchPost();
+    }, [refetchPost])
+  );
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

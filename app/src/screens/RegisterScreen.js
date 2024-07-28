@@ -35,7 +35,7 @@ const RegisterScreen = ({ navigation }) => {
           },
         },
       });
-      // console.log(result);
+
       if (result) {
         Toast.show({
           type: "success",

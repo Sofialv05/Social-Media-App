@@ -36,8 +36,6 @@ const LoginScreen = ({ navigation }) => {
         },
       });
 
-      // console.log(result);
-
       await SecureStore.setItemAsync("accessToken", result.data.login.token);
       await SecureStore.setItemAsync("username", result.data.login.username);
       setIsSignedIn(true);

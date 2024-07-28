@@ -16,11 +16,12 @@ const PostGrid = ({ postImages, navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={({ index, item }) => (
           <TouchableOpacity
+            key={index}
             onPress={() => {
               navigation.push("Detail", { postId: item._id });
             }}
           >
-            <ImagePosts key={index} imgUrl={item.imgUrl} />
+            <ImagePosts imgUrl={item.imgUrl} />
           </TouchableOpacity>
         )}
       />

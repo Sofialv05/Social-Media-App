@@ -1,14 +1,7 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  ActivityIndicator,
-  StyleSheet,
-} from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_FOLLOWERS, GET_FOLLOWING } from "../queries/follow";
-import { FlatList } from "react-native-gesture-handler";
 import FollowList from "../components/FollowList";
 
 export const FollowerScreen = ({ navigation, route }) => {

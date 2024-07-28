@@ -9,19 +9,16 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { Divider } from "react-native-elements";
 import { useMutation } from "@apollo/client";
 import { ADD_POST } from "../../mutations/post";
 import Toast from "react-native-toast-message";
 
 const CreatePostScreen = ({ navigation }) => {
-  // console.log(props);
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [image, setImage] = useState(null);
-  const [addPostFn, { data, error, loading }] = useMutation(ADD_POST);
+  const [addPostFn, { loading }] = useMutation(ADD_POST);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -33,7 +30,7 @@ const CreatePostScreen = ({ navigation }) => {
     console.log(result.assets[0].uri);
     setImage(result.assets[0].uri);
   };
-
+  console.log(UPLOAD_PRESET);
   const uploadImageToCloudinary = async (uri) => {
     const data = new FormData();
     data.append("file", {
@@ -44,7 +41,7 @@ const CreatePostScreen = ({ navigation }) => {
     data.append("upload_preset", "zs2jfkgj");
 
     try {
-      let response = await fetch(
+      const response = await fetch(
         "https://api.cloudinary.com/v1_1/dphp2ihaz/image/upload",
         {
           method: "POST",
@@ -64,7 +61,18 @@ const CreatePostScreen = ({ navigation }) => {
   };
 
   const handleSubmitPost = async () => {
-    if (!image) return;
+    if (!image) {
+      Toast.show({
+        type: "error",
+        text1: "Please choose an image",
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
+        },
+      });
+      return;
+    }
 
     const imageUrl = await uploadImageToCloudinary(image);
     // console.log(imageUrl);

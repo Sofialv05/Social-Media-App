@@ -7,18 +7,22 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import React, { useCallback, useContext, useMemo, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Divider } from "react-native-elements";
 import PostGrid from "../components/PostGrid";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_USER_PROFILE } from "../queries/user";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
+import { FOLLOW_USER } from "../../mutations/follow";
+import * as SecureStore from "expo-secure-store";
 
 const ProfileScreen = ({ route, navigation }) => {
   const { userId } = route.params;
-  const { loading, error, data } = useQuery(GET_USER_PROFILE, {
+  const [username, setUsername] = useState("");
+  const [findFollow, setFindFollow] = useState(undefined);
+  const { loading, error, data, refetch } = useQuery(GET_USER_PROFILE, {
     variables: {
       userId: userId,
       followingUserId: userId,
@@ -26,7 +30,60 @@ const ProfileScreen = ({ route, navigation }) => {
       PostUserId: userId,
     },
   });
-  //   console.log(data);
+  const [followFn, {}] = useMutation(FOLLOW_USER);
+
+  const handleFollow = async () => {
+    try {
+      const result = await followFn({
+        variables: {
+          inputFollow: {
+            followingId: userId,
+          },
+        },
+      });
+      if (result.data.followUser.message) {
+        Toast.show({
+          type: "success",
+          text1: result.data.followUser.message,
+          text1Style: {
+            fontSize: 16,
+            fontWeight: "500",
+            color: "green",
+          },
+        });
+      }
+      refetch();
+    } catch (error) {
+      console.error(error);
+      Toast.show({
+        type: "error",
+        text1: error.message || error.toString(),
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
+        },
+      });
+    }
+  };
+
+  useEffect(() => {
+    const getUsername = async () => {
+      const storedUsername = await SecureStore.getItemAsync("username");
+      setUsername(storedUsername);
+    };
+
+    getUsername();
+  }, []);
+
+  useEffect(() => {
+    if (username && data && data.findAllFollowersById) {
+      const follower = data.findAllFollowersById.find(
+        (e) => e.follower.username === username
+      );
+      setFindFollow(follower);
+    }
+  }, [username, data]);
 
   if (loading) {
     return (
@@ -58,6 +115,41 @@ const ProfileScreen = ({ route, navigation }) => {
           />
           <ProfileInfo name={data.findUserById.name} />
         </SafeAreaView>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          {findFollow ? (
+            <View
+              style={{
+                backgroundColor: "white",
+                borderRadius: 5,
+                paddingVertical: 8,
+                paddingHorizontal: 30,
+                borderWidth: 1,
+              }}
+            >
+              <Text style={{ color: "black" }}>Followed</Text>
+            </View>
+          ) : (
+            <TouchableOpacity onPress={handleFollow}>
+              <View
+                style={{
+                  backgroundColor: "black",
+                  borderRadius: 5,
+                  paddingVertical: 8,
+                  paddingHorizontal: 30,
+                }}
+              >
+                <Text style={{ color: "white" }}>Follow</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
         <Divider width={1} />
         <PostGrid postImages={data.findPostUser} navigation={navigation} />
       </ScrollView>

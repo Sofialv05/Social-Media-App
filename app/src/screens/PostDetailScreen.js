@@ -17,10 +17,8 @@ import React, {
 } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_POST_ID } from "../queries/post";
-import Post from "../components/Home/Post";
 import BottomSheet, {
   BottomSheetBackdrop,
-  BottomSheetFlatList,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { GlobalStateContext } from "../../contexts/GlobalContext";
@@ -40,12 +38,8 @@ const PostDetailScreen = ({ route, navigation }) => {
       postId: id,
     },
   });
-  const [
-    commentFn,
-    { data: dataComment, error: errorComment, loading: loadingComment },
-  ] = useMutation(ADD_COMMENT);
-  const [likeFn, { data: dataLike, error: errorLike, loading: loadingLike }] =
-    useMutation(LIKE_POST);
+  const [commentFn, {}] = useMutation(ADD_COMMENT);
+  const [likeFn, {}] = useMutation(LIKE_POST);
 
   /* Bottom Sheet */
   const bottomSheetRef = useRef(null);
@@ -110,7 +104,6 @@ const PostDetailScreen = ({ route, navigation }) => {
     }
   };
 
-  //   console.log(postId);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

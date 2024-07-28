@@ -1,12 +1,6 @@
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { View, ScrollView, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
-import PostGrid from "../components/PostGrid";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SearchBar } from "react-native-elements";
 import { Feather, Ionicons } from "@expo/vector-icons";
@@ -53,7 +47,7 @@ const SearchScreen = ({ navigation }) => {
             <Ionicons name="arrow-back-outline" size={24} color="gray" />
           }
         />
-        {/* <PostGrid /> */}
+
         <View style={{ margin: 20 }}>
           {loading ? (
             <View

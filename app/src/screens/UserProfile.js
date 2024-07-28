@@ -18,20 +18,32 @@ import * as SecureStore from "expo-secure-store";
 import { useQuery } from "@apollo/client";
 import { GET_USERLOGIN_PROFILE } from "../queries/user";
 import client from "../config/apolloConnection";
-import Toast from "react-native-toast-message";
+import { useFocusEffect } from "@react-navigation/native";
 
 const UserProfile = ({ navigation }) => {
-  const { loading, error, data } = useQuery(GET_USERLOGIN_PROFILE);
+  const { loading, error, data, refetch } = useQuery(GET_USERLOGIN_PROFILE);
   const { setIsSignedIn } = useContext(AuthContext);
 
   /* Bottom Sheet */
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => ["18%"], []);
   const handleOpenSheet = () => bottomSheetRef.current?.snapToIndex(0);
-  const renderBackDrop = useCallback((props) => (
-    <BottomSheetBackdrop appearsOnIndex={1} disappearsOnIndex={-1} {...props} />
-  ));
+  const renderBackDrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        appearsOnIndex={1}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    ),
+    []
+  );
   /* Bottom Sheet */
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   if (loading) {
     return (
@@ -180,7 +192,7 @@ const Profile = ({ posts, followers, following, navigation }) => {
 const ProfileInfo = ({ name }) => {
   return (
     <View>
-      <Text style={{ marginVertical: 3, fontSize: 14 }}>User's name</Text>
+      <Text style={{ marginVertical: 3, fontSize: 14 }}>{name}</Text>
       <Text style={{ lineHeight: 22 }}>
         Contrary to popular belief, Lorem Ipsum is not simply random text. It
         has roots in a piece of classical Latin literature from 45 BC, making it
