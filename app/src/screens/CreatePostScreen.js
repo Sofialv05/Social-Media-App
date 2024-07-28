@@ -14,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Divider } from "react-native-elements";
 import { useMutation } from "@apollo/client";
 import { ADD_POST } from "../../mutations/post";
+import Toast from "react-native-toast-message";
 
 const CreatePostScreen = ({ navigation }) => {
   // console.log(props);
@@ -69,6 +70,16 @@ const CreatePostScreen = ({ navigation }) => {
     // console.log(imageUrl);
     if (!imageUrl) {
       console.error("Failed to upload image");
+      Toast.show({
+        type: "error",
+        text1: "Failed to upload image",
+        text2: "Please, try again",
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
+        },
+      });
       return;
     }
 
@@ -91,6 +102,15 @@ const CreatePostScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.log(error);
+      Toast.show({
+        type: "error",
+        text1: error.message || error.toString(),
+        text1Style: {
+          fontSize: 16,
+          fontWeight: "600",
+          color: "red",
+        },
+      });
     }
   };
 
